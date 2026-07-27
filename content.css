@@ -1,59 +1,43 @@
-/* Smart Multi-RTL Pro CSS v3.1 */
+/* Smart Multi-RTL Pro CSS v3.2 (Fixed) */
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.2/dist/font-face.css');
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/samim-font@v4.0.5/dist/font-face.css');
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/sahel-font@v3.4.0/dist/font-face.css');
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/parastoo-font@v1.0.0-alpha5/dist/font-face.css');
 
-/* Text Direction Rules */
-p.smart-rtl-text-right,
-li.smart-rtl-text-right,
-h1.smart-rtl-text-right,
-h2.smart-rtl-text-right,
-h3.smart-rtl-text-right,
-h4.smart-rtl-text-right,
-h5.smart-rtl-text-right,
-h6.smart-rtl-text-right,
-blockquote.smart-rtl-text-right,
-td.smart-rtl-text-right,
-th.smart-rtl-text-right,
-label.smart-rtl-text-right,
-input.smart-rtl-text-right,
-textarea.smart-rtl-text-right,
-span.smart-rtl-text-right,
-[contenteditable].smart-rtl-text-right {
+/* Text Direction Rules — عمومی */
+.smart-rtl-text-right {
     direction: rtl !important;
     text-align: right !important;
 }
 
+/* به‌جای display:inline-block از unicode-bidi استفاده می‌شود */
 span.smart-rtl-text-right {
-    display: inline-block !important;
+    unicode-bidi: isolate !important;
+}
+
+.smart-rtl-text-left {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* هرگز داخل ادیتورهای غنی دست‌کاری نکن (لایه‌ی دفاعی دوم) */
+.ql-editor .smart-rtl-text-right,
+.ProseMirror .smart-rtl-text-right,
+.DraftEditor-root .smart-rtl-text-right,
+[data-slate-editor="true"] .smart-rtl-text-right,
+.monaco-editor .smart-rtl-text-right,
+.CodeMirror .smart-rtl-text-right {
+    all: revert !important;
 }
 
 /* Font Families */
-.smart-rtl-font-vazir {
-    font-family: 'Vazirmatn', -apple-system, sans-serif !important;
-}
-
-.smart-rtl-font-yekan {
-    font-family: 'IRANYekanWeb', 'B Yekan', 'Yekan', 'Vazirmatn', sans-serif !important;
-}
-
-.smart-rtl-font-shabnam {
-    font-family: 'Shabnam', 'Vazirmatn', sans-serif !important;
-}
-
-.smart-rtl-font-samim {
-    font-family: 'Samim', 'Vazirmatn', sans-serif !important;
-}
-
-.smart-rtl-font-sahel {
-    font-family: 'Sahel', 'Vazirmatn', sans-serif !important;
-}
-
-.smart-rtl-font-parastoo {
-    font-family: 'Parastoo', 'Vazirmatn', sans-serif !important;
-}
+.smart-rtl-font-vazir { font-family: 'Vazirmatn', -apple-system, sans-serif !important; }
+.smart-rtl-font-yekan { font-family: 'IRANYekanWeb', 'B Yekan', 'Yekan', 'Vazirmatn', sans-serif !important; }
+.smart-rtl-font-shabnam { font-family: 'Shabnam', 'Vazirmatn', sans-serif !important; }
+.smart-rtl-font-samim { font-family: 'Samim', 'Vazirmatn', sans-serif !important; }
+.smart-rtl-font-sahel { font-family: 'Sahel', 'Vazirmatn', sans-serif !important; }
+.smart-rtl-font-parastoo { font-family: 'Parastoo', 'Vazirmatn', sans-serif !important; }
 
 /* Font Size Scaling */
 .smart-rtl-size-110 { font-size: 110% !important; }
@@ -69,7 +53,7 @@ span.smart-rtl-text-right {
     position: fixed;
     bottom: 24px;
     left: 24px;
-    z-index: 999999;
+    z-index: 2147483647;
     background: linear-gradient(135deg, #6366f1, #8b5cf6);
     color: white;
     width: 42px;
@@ -85,6 +69,8 @@ span.smart-rtl-text-right {
     border: 2px solid rgba(255, 255, 255, 0.2);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     user-select: none;
+    direction: ltr !important;
+    text-align: center !important;
 }
 
 #smart-rtl-floating-widget:hover {
