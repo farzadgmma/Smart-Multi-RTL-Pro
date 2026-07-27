@@ -175,12 +175,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const s = site.toLowerCase().trim();
                 return currentDomain === s || currentDomain.endsWith('.' + s) || s.endsWith('.' + currentDomain);
             });
-
-        if (currentDomain) {
-            const isDisabled = Array.isArray(stored.disabledSites) && stored.disabledSites.some(site => {
-                const s = site.toLowerCase().trim();
-                return currentDomain === s || currentDomain.endsWith('.' + s) || s.endsWith('.' + currentDomain);
-            });
             domainToggle.checked = !isDisabled;
         }
         updateUiState();
