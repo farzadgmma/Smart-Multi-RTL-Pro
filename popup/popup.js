@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Phone Number Validation Logic for Allowed Countries: IR, IQ, LB, YE, CN, RU
     function validatePhoneNumber(country, phone) {
         const cleaned = phone.replace(/[\s\-\+\(\)]/g, '');
         if (!cleaned || cleaned.length < 7) {
@@ -72,7 +71,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return { valid: true };
     }
 
-    // Submit Registration
     if (registerSubmitBtn) {
         registerSubmitBtn.addEventListener('click', () => {
             const country = countrySelect.value;
@@ -88,7 +86,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             registerSubmitBtn.disabled = true;
             registerSubmitBtn.textContent = 'در حال ثبت...';
 
-            // Send registration data to MobtakerAi Server
             fetch('https://www.mobtakerai.ir/api/register-user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -99,9 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     app: 'Multi-RTL-Pro'
                 })
             }).catch(() => {
-                // Network/Server offline fallback
             }).finally(() => {
-                // Save activation locally
                 chrome.storage.sync.set({
                     registered: true,
                     userPhone: phone,
@@ -109,8 +104,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }, () => {
                     registrationOverlay.classList.add('hidden');
                     notifyContentScript();
-
-                    // Open guide page after registration
                     chrome.tabs.create({ url: 'https://www.mobtakerai.ir/ChromeExtantion/guide.html' });
                 });
             });
@@ -132,7 +125,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Handle external links safely in extension popup
     document.querySelectorAll('a[href^="http"]').forEach((link) => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -148,7 +140,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (tab && tab.url && tab.url.startsWith('http')) {
             try {
                 const urlObj = new URL(tab.url);
-                currentDomain = urlObj.hostname;
+                currentDomain = urlObj.hostname.toLowerCase();
                 currentDomainEl.textContent = currentDomain;
             } catch (e) {
                 currentDomainEl.textContent = 'صفحه وب';
@@ -179,7 +171,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         widgetToggle.checked = !!stored.showWidget;
 
         if (currentDomain) {
-            const isDisabled = Array.isArray(stored.disabledSites) && stored.disabledSites.includes(currentDomain);
+            const isDisabled = Array.isArray(stored.disabledSites) && stored.disabledSites.some(site => {
+                const s = site.toLowerCase().trim();
+                return currentDomain === s || currentDomain.endsWith('.' + s) || s.endsWith('.' + currentDomain);
+            });
             domainToggle.checked = !isDisabled;
         }
     });
@@ -194,7 +189,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         disabledSites.push(currentDomain);
                     }
                 } else {
-                    disabledSites = disabledSites.filter(d => d !== currentDomain);
+                    disabledSites = disabledSites.filter(d => d !== currentDomain && !currentDomain.endsWith('.' + d) && !d.endsWith('.' + currentDomain));
                 }
             }
 
@@ -230,7 +225,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 1200);
     }
 
-    // Full Page Translate Button Handler
     if (translatePageBtn) {
         translatePageBtn.addEventListener('click', () => {
             getActiveTab((tab) => {
@@ -239,7 +233,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Toggle current element direction button
     if (toggleCurrentBtn) {
         toggleCurrentBtn.addEventListener('click', () => {
             getActiveTab((tab) => {

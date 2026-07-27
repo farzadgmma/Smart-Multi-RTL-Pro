@@ -1,7 +1,6 @@
 /**
- * Smart Multi-RTL Pro Engine v3.4
- * Ultimate Feature-Packed Persian/Arabic Web Engine by Mobtakeran Nik Afzar
- * Includes Registration Check & 1-Click Page Translation to Persian
+ * Smart Multi-RTL Pro Engine v4.0
+ * Absolute Isolation & Instant Full Cleanup Engine
  */
 
 (() => {
@@ -10,10 +9,8 @@
     const PERSIAN_ARABIC_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFE]/;
     const ENGLISH_REGEX = /[a-zA-Z]/g;
     const ENGLISH_DIGITS_REGEX = /[0-9]/g;
-
     const PERSIAN_DIGITS_MAP = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
     
-    // Layout containers and UI elements protection
     const IGNORE_TAGS = new Set([
         'HTML', 'BODY', 'SCRIPT', 'STYLE', 'NOSCRIPT', 'SVG', 'CODE', 'PRE', 
         'BUTTON', 'NAV', 'HEADER', 'FOOTER', 'ASIDE', 'CANVAS', 'IFRAME', 'FORM',
@@ -37,6 +34,11 @@
 
     let lastContextElement = null;
 
+    const FONT_CLASSES = [
+        'smart-rtl-font-vazir', 'smart-rtl-font-yekan', 'smart-rtl-font-shabnam', 
+        'smart-rtl-font-samim', 'smart-rtl-font-sahel', 'smart-rtl-font-parastoo'
+    ];
+
     const FONT_MAP = {
         system: '',
         vazir: "'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif",
@@ -47,20 +49,68 @@
         parastoo: "'Parastoo', sans-serif"
     };
 
-    const isSiteDisabled = () => !settings.registered || !settings.enabled || settings.disabledSites.includes(location.hostname);
+    const isSiteDisabled = () => {
+        if (!settings.registered) return true;
+        if (!settings.enabled) return true;
 
-    /**
-     * Translate entire web page to Persian (fa) via Google Translate Engine
-     */
+        const host = location.hostname.toLowerCase();
+        if (Array.isArray(settings.disabledSites)) {
+            return settings.disabledSites.some(site => {
+                const s = site.toLowerCase().trim();
+                return host === s || host.endsWith('.' + s) || s.endsWith('.' + host);
+            });
+        }
+        return false;
+    };
+
+    function injectInlineStyles() {
+        if (isSiteDisabled()) {
+            removeInlineStyles();
+            return;
+        }
+        if (document.getElementById('smart-rtl-style-root')) return;
+        const style = document.createElement('style');
+        style.id = 'smart-rtl-style-root';
+        style.textContent = `
+            .smart-rtl-text-right {
+                direction: rtl !important;
+                text-align: right !important;
+            }
+            span.smart-rtl-text-right {
+                display: inline-block !important;
+            }
+            .smart-rtl-text-left {
+                direction: ltr !important;
+                text-align: left !important;
+            }
+            .smart-rtl-font-vazir { font-family: 'Vazirmatn', -apple-system, sans-serif !important; }
+            .smart-rtl-font-yekan { font-family: 'IRANYekanWeb', 'B Yekan', 'Yekan', sans-serif !important; }
+            .smart-rtl-font-shabnam { font-family: 'Shabnam', sans-serif !important; }
+            .smart-rtl-font-samim { font-family: 'Samim', sans-serif !important; }
+            .smart-rtl-font-sahel { font-family: 'Sahel', sans-serif !important; }
+            .smart-rtl-font-parastoo { font-family: 'Parastoo', sans-serif !important; }
+
+            .smart-rtl-size-110 { font-size: 110% !important; }
+            .smart-rtl-size-120 { font-size: 120% !important; }
+            .smart-rtl-size-130 { font-size: 130% !important; }
+            .smart-rtl-lh-relaxed { line-height: 1.8 !important; }
+            .smart-rtl-lh-loose { line-height: 2.1 !important; }
+        `;
+        (document.head || document.documentElement).appendChild(style);
+    }
+
+    function removeInlineStyles() {
+        const style = document.getElementById('smart-rtl-style-root');
+        if (style) style.remove();
+    }
+
     function translatePageToPersian() {
+        if (isSiteDisabled()) return;
         if (window.location.host.includes('translate.goog') || window.location.host.includes('translate.google')) return;
         const targetUrl = `https://translate.google.com/translate?sl=auto&tl=fa&u=${encodeURIComponent(window.location.href)}`;
         window.location.href = targetUrl;
     }
 
-    /**
-     * Convert English digits to Persian digits inside Persian text nodes
-     */
     function convertDigitsToPersian(text) {
         if (!text) return text;
         return text.replace(ENGLISH_DIGITS_REGEX, (digit) => PERSIAN_DIGITS_MAP[parseInt(digit, 10)]);
@@ -112,11 +162,14 @@
     }
 
     function applyStylesAndFont(el) {
-        const fontStr = FONT_MAP[settings.font];
-        if (fontStr && settings.font !== 'system') {
-            el.style.setProperty('font-family', fontStr, 'important');
-        } else {
-            el.style.removeProperty('font-family');
+        if (isSiteDisabled()) return;
+
+        // Remove old font classes
+        FONT_CLASSES.forEach(cls => el.classList.remove(cls));
+
+        // Add active font class
+        if (settings.font && settings.font !== 'system') {
+            el.classList.add(`smart-rtl-font-${settings.font}`);
         }
 
         if (settings.fontSize && settings.fontSize !== '100') {
@@ -133,6 +186,7 @@
     }
 
     function setRtl(el) {
+        if (isSiteDisabled()) return;
         el.setAttribute('dir', 'rtl');
         el.classList.add('smart-rtl-text-right');
         el.classList.remove('smart-rtl-text-left');
@@ -149,9 +203,11 @@
     }
 
     function setLtr(el) {
+        if (isSiteDisabled()) return;
         el.setAttribute('dir', 'ltr');
         el.classList.add('smart-rtl-text-left');
         el.classList.remove('smart-rtl-text-right');
+        FONT_CLASSES.forEach(cls => el.classList.remove(cls));
         el.style.removeProperty('font-family');
     }
 
@@ -160,10 +216,14 @@
         el.classList.remove('smart-rtl-text-right', 'smart-rtl-text-left');
         el.classList.remove('smart-rtl-size-110', 'smart-rtl-size-120', 'smart-rtl-size-130');
         el.classList.remove('smart-rtl-lh-relaxed', 'smart-rtl-lh-loose');
+        FONT_CLASSES.forEach(cls => el.classList.remove(cls));
         el.style.removeProperty('font-family');
+        el.style.removeProperty('direction');
+        el.style.removeProperty('text-align');
     }
 
     function processElement(el) {
+        if (isSiteDisabled()) return;
         if (isLayoutContainerOrUi(el)) return;
         if (el.hasAttribute(MANUAL_ATTR)) return;
 
@@ -232,16 +292,29 @@
         if (isSiteDisabled()) {
             removeAllStyles();
             removeFloatingWidget();
+            removeInlineStyles();
             return;
         }
+        injectInlineStyles();
         scanNodeTree(document.body);
         renderFloatingWidget();
     }
 
+    /**
+     * Absolute 100% Cleanup of ALL extension classes, inline fonts, dir attributes, and widgets
+     */
     function removeAllStyles() {
-        document.querySelectorAll('.smart-rtl-text-right, .smart-rtl-text-left, [dir="rtl"], [dir="ltr"]').forEach(el => {
-            if (!el.hasAttribute(MANUAL_ATTR)) clearDirection(el);
+        const fontSelector = FONT_CLASSES.map(c => '.' + c).join(', ');
+        const selector = `.smart-rtl-text-right, .smart-rtl-text-left, ${fontSelector}, [dir="rtl"], [dir="ltr"]`;
+
+        document.querySelectorAll(selector).forEach(el => {
+            if (!el.hasAttribute(MANUAL_ATTR)) {
+                clearDirection(el);
+            }
         });
+
+        removeFloatingWidget();
+        removeInlineStyles();
     }
 
     /* Floating Quick Toggle Widget */
@@ -258,6 +331,7 @@
             widget.innerHTML = '⇄';
             widget.title = 'تغییر جهت سریع متون (RTL / LTR)';
             widget.addEventListener('click', () => {
+                if (isSiteDisabled()) return;
                 const isRtlNow = document.body.getAttribute('data-smart-rtl-mode') === 'rtl';
                 if (isRtlNow) {
                     settings.mode = 'ltr';
@@ -268,7 +342,7 @@
                 }
                 fullScan();
             });
-            document.body.appendChild(widget);
+            (document.body || document.documentElement).appendChild(widget);
         }
     }
 
@@ -310,7 +384,6 @@
         }
     }
 
-    // Context menu / focus tracking
     document.addEventListener('contextmenu', e => { lastContextElement = e.target; }, true);
     document.addEventListener('focusin', e => {
         if (e.target?.tagName === 'TEXTAREA' || e.target?.isContentEditable || e.target?.tagName === 'INPUT') {
@@ -319,6 +392,7 @@
     }, true);
 
     function toggleElementDirection(el) {
+        if (isSiteDisabled()) return;
         if (!el || el === document.body) return;
         
         const target = el.closest('p, li, h1, h2, h3, h4, h5, h6, blockquote, td, th, label, input, textarea, [contenteditable], span') || el;
@@ -332,7 +406,6 @@
         }
     }
 
-    // Live typing listener
     document.addEventListener('input', (e) => {
         if (isSiteDisabled()) return;
         const target = e.target;
@@ -352,7 +425,6 @@
             loadSettings(() => {
                 if (isSiteDisabled()) {
                     removeAllStyles();
-                    removeFloatingWidget();
                 } else {
                     fullScan();
                 }
@@ -376,7 +448,6 @@
         for (const k in changes) settings[k] = changes[k].newValue;
         if (isSiteDisabled()) {
             removeAllStyles();
-            removeFloatingWidget();
         } else {
             fullScan();
         }
@@ -384,8 +455,12 @@
 
     // Start Engine
     loadSettings(() => {
-        fullScan();
-        startObserving();
+        if (isSiteDisabled()) {
+            removeAllStyles();
+        } else {
+            fullScan();
+            startObserving();
+        }
     });
 
 })();
