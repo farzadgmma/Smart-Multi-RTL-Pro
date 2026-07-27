@@ -1,80 +1,71 @@
-# Smart Multi-RTL Pro | کمپانی مبتکران نیک افزار
+# Smart Multi-RTL Pro 🌐✨
 
-> **افزونه هوشمند راست‌چین‌سازی متون فارسی، تغییر فونت، ترجمه ۱-کلیکه و بهینه‌سازی خوانایی وب‌سایت‌ها**  
-> توسعه داده شده توسط **کمپانی مبتکران نیک افزار**
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Manifest](https://img.shields.io/badge/Manifest-V3-success)
+![Developer](https://img.shields.io/badge/Developer-Mobtaker%20NikoAfzar-purple)
 
----
+**Smart Multi-RTL Pro** is an advanced Chrome Extension designed to intelligently convert text direction, typography, and numbers on web pages to provide the ultimate reading experience for RTL (Right-to-Left) languages.
 
-## 📌 درباره افزونه (About Extension)
-
-افزونه **Smart Multi-RTL Pro** یک ابزار پیشرفته و بدون تداخل برای راست‌چین‌سازی اتوماتیک متون فارسی و عربی در تمام وب‌سایت‌ها (شامل ChatGPT، Claude، Telegram Web، Reddit و...) است. این افزونه بدون دستکاری چیدمان سایت یا کدهای برنامه‌نویسی، متون را با ۶ فونت محبوب فارسی و قابلیت‌های حرفه‌ای نمایش می‌دهد.
-
----
-
-## 🇮🇷 فارسی (Persian)
-
-### ✨ امکانات و قابلیت‌های اصلی:
-- **تشخیص خودکار متون (Auto RTL):** شناسایی هوشمند متون فارسی و عربی بدون دستکاری کادرهای انگلیسی یا کدهای برنامه‌نویسی.
-- **۶ فونت محبوب فارسی:** پشتیبانی از فونت‌های *وزیرمتن*، *ایرانیکان*، *شبنم*، *صمیم*، *ساحل* و *پرستو*.
-- **ترجمه ۱-کلیکه صفحه:** ترجمه سریع کل صفحات انگلیسی به فارسی روان به همراه راست‌چین‌سازی اتوماتیک.
-- **تنظیم اندازه متن و فاصله خطوط:** قابلیت بزرگ‌نمایی متون تا ۱۳۰٪ و تنظیم Line Height جهت مطالعه راحت‌تر مقالات.
-- **تبدیل اعداد به ارقام فارسی:** تبدیل اتوماتیک اعداد انگلیسی به ارقام زیبای فارسی (`۱۲۳۴۵۶۷۸۹۰`).
-- **دکمه میانبر شناور (⇄):** ویجت شناور روی صفحات جهت تغییر جهت سریع متون بدون نیاز به باز کردن پاپ‌آپ.
-
-### 📥 دانلود و نصب سریع:
-1. پکیج را از لینک زیر دانلود و استخراج (Extract) کنید:
-   🔗 **[دانلود مستقیم پکیج افزونه Multi-RTL Pro](https://www.mobtakerai.ir/ChromeExtantion/multi-RTL-pro-free-iran.zip)**
-2. روی فایل **`Install-Setup.bat`** دبل‌کلیک کنید تا مسیر افزونه خودکار کپی شده و مرورگر باز شود.
-3. در مرورگر کروم، **Developer mode** را روشن کرده و با کلیک روی **Load unpacked**، کلید `Ctrl+V` را بزنید و پوشه را انتخاب کنید.
+[🇮🇷 توضیحات فارسی](#-فارسی---توضیحات-افزونه) | [🇸🇦 الوصف بالعربية](#-العربية---وصف-الإضافة) | [🇬🇧 English Description](#-english---extension-description)
 
 ---
 
-## 🇸🇦 🇮🇶 🇱🇧 🇾🇪 العربية (Arabic - Iraq, Lebanon, Yemen)
+## 🇬🇧 English - Extension Description
 
-### ✨ الميزات الرئيسية:
-- **محاذاة تلقائية ذكية (Auto RTL):** التعرف التلقائي على النصوص العربية والفارسية ومحاذاتها لليمين دون التأثير على تخطيط الموقع أو الأكواد البرمجية.
-- **خطوط عربية وفارسية جيدة:** دعم خطوط ممتازة مثل *Vazirmatn*، *IRANYekan*، *Shabnam*، *Samim*، *Sahel* و *Parastoo*.
-- **ترجمة بنقرة واحدة:** ترجمة الصفحات الكاملة إلى اللغة الفارسية مع ضبط اتجاه النص والخطوط تلقائيًا.
-- **تعديل حجم النص وتباعد الأسطر:** تكبير النصوص وتعديل تباعد الأسطر لقراءة مريحة للمقالات.
-- **أزرار اختصار عائمة (⇄):** زر عائم على صفحات الويب لتغيير اتجاه النص بسرعة.
+An intelligent Chrome extension built for developers, researchers, and general users to seamlessly convert unreadable left-to-right (LTR) web pages into perfectly styled right-to-left (RTL) layouts with beautiful typography. 
 
-### 📥 التثبيت:
-1. قم بتنزيل الملف وتفكيك الضغط عنه:  
-   🔗 **[رابط التنزيل المباشر](https://www.mobtakerai.ir/ChromeExtantion/multi-RTL-pro-free-iran.zip)**
-2. قم بتفعيل **Developer mode** في متصفح Chrome (`chrome://extensions`).
-3. انقر على **Load unpacked** واختر مجلد الإضافة.
+### 🚀 Key Features:
+- **Smart Auto-Detection:** Automatically detects Arabic/Persian text and applies RTL alignment without breaking native site layouts.
+- **Custom Typography:** Apply popular Persian/Arabic fonts like Vazirmatn, Yekan, Shabnam, etc., with a single click.
+- **Smart Number Conversion:** Automatically converts English digits (123) to Persian/Arabic digits (۱۲۳).
+- **Floating Shortcut Widget:** Easily toggle directions on the fly.
+- **Native Layout Protection:** Preserves original developer alignments on sites that are already built for RTL.
 
----
-
-## 🇬🇧 English
-
-### ✨ Key Features:
-- **Smart Auto-RTL Engine:** Automatically detects Persian and Arabic text nodes and applies RTL alignment without disrupting page UI layouts or code blocks.
-- **6 Premium Persian/Arabic Web Fonts:** Switch between Vazirmatn, IRANYekan, Shabnam, Samim, Sahel, and Parastoo.
-- **1-Click Full Page Translation:** Instant translation of foreign pages to Persian with automatic font and layout styling.
-- **Font Resizing & Line Height Adjustment:** Scale text size up to 130% and customize line-spacing for enhanced readability.
-- **Persian Digits Converter:** Optionally convert English numbers into Persian digits (`۱۲۳۴۵۶۷۸۹۰`).
-- **Floating Quick Toggle Widget (⇄):** On-page floating widget for instant direction toggle.
-
-### 📥 Installation:
-1. Download and extract the extension package:  
-   🔗 **[Direct Download Link](https://www.mobtakerai.ir/ChromeExtantion/multi-RTL-pro-free-iran.zip)**
-2. Open `chrome://extensions` in Google Chrome and enable **Developer mode**.
-3. Click **Load unpacked** and select the extracted extension folder.
+### 🛠 Installation:
+1. Download the extension ZIP file and extract it.
+2. Open Chrome and go to `chrome://extensions/`.
+3. Enable **Developer mode** (top right corner).
+4. Click **Load unpacked** and select the extracted folder.
+5. Click on the extension icon to register and enjoy!
 
 ---
 
-## 🏢 درباره کمپانی مبتکران نیک افزار (Mobtakeran Nik Afzar)
+## 🇮🇷 فارسی - توضیحات افزونه
 
-کمپانی **مبتکران نیک افزار** توسعه‌دهنده تخصصی اپلیکیشن‌های موبایل، وب‌سایت‌های پیشرفته، زیرساخت‌های DevOps و بازی‌های رایانه‌ای است.
+**اسمارت مولتی آر‌تی‌ال پرو** یک افزونه پیشرفته و هوشمند برای مرورگر کروم است که به شما اجازه می‌دهد متون، چیدمان و فونت‌های هر وب‌سایتی را به زیباترین شکل ممکن راست‌چین (RTL) کنید. این افزونه برای برنامه‌نویسان، دانشجویان و تمامی وب‌گردها طراحی شده تا تجربه مطالعه در وب را متحول کند.
 
-### 🌐 پلتفرم‌ها و سرویس‌های ما:
-- 🤖 **پلتفرم هوش مصنوعی:** [MobtakerAi.ir](https://www.mobtakerai.ir)
-- 🎬 **پلتفرم VOD سکانستو:** [bot.sekansto.ir](https://bot.sekansto.ir)
-- 🌐 **وب‌سایت رسمی کمپانی:** [Corp.mobtakerAi.ir](https://Corp.mobtakerAi.ir)
-- ✈️ **کانال تلگرام:** [@MobtakerAi](https://t.me/MobtakerAi)
-- 📷 **پیج اینستاگرام:** [@mobtakerAI](https://instagram.com/mobtakerAI)
-- 📞 **شماره تماس مستقیم:** `09120293361`
+### 🚀 ویژگی‌های کلیدی:
+- **تشخیص هوشمند (Auto-RTL):** متون فارسی/عربی را به صورت خودکار تشخیص داده و بدون خراب کردن چیدمان اصلی سایت، آن‌ها را راست‌چین می‌کند.
+- **فونت‌های اختصاصی:** اعمال فونت‌های محبوب مانند وزیرمتن، ایران‌یکان، شبنم، صمیم و... تنها با یک کلیک.
+- **تبدیل هوشمند اعداد:** تبدیل خودکار اعداد انگلیسی (123) به اعداد فارسی (۱۲۳) در متن مقالات.
+- **دکمه شناور جادویی:** تغییر جهت سریع متون سایت بدون نیاز به باز کردن پاپ‌آپ.
+- **محافظت از سایت‌های بومی:** اگر سایتی از پایه فارسی باشد، افزونه در گرافیک آن دخالت مخرب نمی‌کند.
+
+### 🛠 راهنمای نصب:
+۱. فایل ZIP افزونه را دانلود و استخراج (Extract) کنید.
+۲. در مرورگر کروم به آدرس `chrome://extensions/` بروید.
+۳. گزینه **Developer mode (حالت توسعه‌دهنده)** را در بالا سمت راست روشن کنید.
+۴. روی دکمه **Load unpacked** کلیک کرده و پوشه افزونه را انتخاب کنید.
 
 ---
-© 2026 مبتکران نیک افزار | Mobtakeran Nik Afzar. All Rights Reserved.
+
+## 🇸🇦 العربية - وصف الإضافة
+
+**Smart Multi-RTL Pro** هي إضافة متطورة وذكية لمتصفح جوجل كروم تتيح لك تحويل اتجاه النصوص والتخطيط والخطوط في أي موقع ويب إلى (RTL) بأجمل شكل ممكن. تم تصميم هذه الإضافة لتغيير تجربة القراءة على الويب تمامًا.
+
+### 🚀 الميزات الرئيسية:
+- **التعرف الذكي (Auto-RTL):** يكتشف النصوص العربية/الفارسية تلقائيًا ويقوم بمحاذاتها إلى اليمين دون كسر التخطيط الأصلي للموقع.
+- **خطوط مخصصة:** تطبيق خطوط شهيرة وجميلة بنقرة واحدة فقط لضمان قراءة مريحة.
+- **التحويل الذكي للأرقام:** تحويل الأرقام الإنجليزية (123) تلقائيًا إلى أرقام عربية/فارسية (١٢٣) داخل النصوص.
+- **زر عائم سحري:** لتغيير اتجاه النصوص بسرعة داخل الموقع دون الحاجة لفتح القائمة.
+- **حماية المواقع الأصلية:** لا تتدخل الإضافة في التصميم الأصلي للمواقع المبنية أساسًا باللغة العربية.
+
+### 🛠 دليل التثبيت:
+1. قم بتنزيل ملف ZIP الخاص بالإضافة واستخرجه.
+2. انتقل إلى الرابط `chrome://extensions/` في متصفح كروم.
+3. قم بتفعيل **Developer mode (وضع المطور)** في الزاوية العلوية اليمنى.
+4. انقر فوق الزر **Load unpacked** وحدد المجلد المستخرج.
+5. استمتع بتجربة قراءة لا مثيل لها!
+
+---
+*Developed with ❤️ by **MobtakerAi (مبتکران نیک افزار)***
