@@ -185,10 +185,22 @@
         }
     }
 
+    
+    const isNativeRtlSite = () => {
+        return document.documentElement?.dir === 'rtl' || document.body?.dir === 'rtl';
+    };
+
     function setRtl(el) {
         if (isSiteDisabled()) return;
-        el.setAttribute('dir', 'rtl');
-        el.classList.add('smart-rtl-text-right');
+        
+        if (!el.hasAttribute('dir')) {
+            el.setAttribute('dir', 'rtl');
+            el.setAttribute('data-smart-rtl-dir', 'true');
+        }
+        
+        if (!isNativeRtlSite()) {
+            el.classList.add('smart-rtl-text-right');
+        }
         el.classList.remove('smart-rtl-text-left');
         applyStylesAndFont(el);
 
@@ -204,7 +216,10 @@
 
     function setLtr(el) {
         if (isSiteDisabled()) return;
-        el.setAttribute('dir', 'ltr');
+        if (!el.hasAttribute('dir')) {
+            el.setAttribute('dir', 'ltr');
+            el.setAttribute('data-smart-rtl-dir', 'true');
+        }
         el.classList.add('smart-rtl-text-left');
         el.classList.remove('smart-rtl-text-right');
         FONT_CLASSES.forEach(cls => el.classList.remove(cls));
@@ -212,7 +227,10 @@
     }
 
     function clearDirection(el) {
-        el.removeAttribute('dir');
+        if (el.getAttribute('data-smart-rtl-dir') === 'true') {
+            el.removeAttribute('dir');
+            el.removeAttribute('data-smart-rtl-dir');
+        }
         el.classList.remove('smart-rtl-text-right', 'smart-rtl-text-left');
         el.classList.remove('smart-rtl-size-110', 'smart-rtl-size-120', 'smart-rtl-size-130');
         el.classList.remove('smart-rtl-lh-relaxed', 'smart-rtl-lh-loose');
@@ -221,6 +239,7 @@
         el.style.removeProperty('direction');
         el.style.removeProperty('text-align');
     }
+
 
     function processElement(el) {
         if (isSiteDisabled()) return;

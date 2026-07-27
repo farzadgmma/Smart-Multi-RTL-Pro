@@ -175,11 +175,39 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const s = site.toLowerCase().trim();
                 return currentDomain === s || currentDomain.endsWith('.' + s) || s.endsWith('.' + currentDomain);
             });
+
+        if (currentDomain) {
+            const isDisabled = Array.isArray(stored.disabledSites) && stored.disabledSites.some(site => {
+                const s = site.toLowerCase().trim();
+                return currentDomain === s || currentDomain.endsWith('.' + s) || s.endsWith('.' + currentDomain);
+            });
             domainToggle.checked = !isDisabled;
         }
+        updateUiState();
     });
 
+
+
+    function updateUiState() {
+        const isOff = !globalToggle.checked || !domainToggle.checked;
+        const controls = [modeSelect, fontSelect, sizeSelect, lineheightSelect, numbersToggle, widgetToggle, translatePageBtn, toggleCurrentBtn];
+        controls.forEach(c => {
+            if (c) c.disabled = isOff;
+        });
+        document.querySelectorAll('.card:not(:first-child)').forEach(card => {
+            if (isOff) {
+                card.style.opacity = '0.5';
+                card.style.pointerEvents = 'none';
+            } else {
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+            }
+        });
+    }
+
     function saveSettings() {
+        updateUiState();
+
         chrome.storage.sync.get({ disabledSites: [] }, (stored) => {
             let disabledSites = stored.disabledSites || [];
 
