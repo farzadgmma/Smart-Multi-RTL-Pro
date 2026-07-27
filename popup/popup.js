@@ -188,7 +188,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         controls.forEach(c => {
             if (c) c.disabled = isOff;
         });
-        document.querySelectorAll('.card:not(:first-child)').forEach(card => {
+        document.querySelectorAll('.card').forEach(card => {
+            if (card.querySelector('#global-toggle') || card.querySelector('#domain-toggle')) {
+                // If it's the global toggle, never disable it visually.
+                // If it's the domain toggle, only disable it visually if global toggle is off.
+                if (card.querySelector('#domain-toggle')) {
+                    if (!globalToggle.checked) {
+                        card.style.opacity = '0.5';
+                        card.style.pointerEvents = 'none';
+                    } else {
+                        card.style.opacity = '1';
+                        card.style.pointerEvents = 'auto';
+                    }
+                }
+                return;
+            }
+
             if (isOff) {
                 card.style.opacity = '0.5';
                 card.style.pointerEvents = 'none';
