@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آموزش و راهنمایی برای نصب و اجرای افزونه | مبتکران نیک افزار</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap">
+    <style>
+        :root {
+            --bg-color: #080c14;
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --neon-blue: #38bdf8;
+            --neon-purple: #c084fc;
+            --neon-pink: #f43f5e;
+            --neon-green: #10b981;
+            --border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #f8fafc;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(192, 132, 252, 0.2) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(56, 189, 248, 0.2) 0%, transparent 45%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+        }
+
+        /* Neon Header */
+        header {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(192, 132, 252, 0.4);
+            border-radius: 22px;
+            padding: 36px 24px;
+            text-align: center;
+            box-shadow: 0 12px 50px rgba(192, 132, 252, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+        }
+
+        .main-hero-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 12px;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+            letter-spacing: -0.5px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(244, 63, 94, 0.2), rgba(192, 132, 252, 0.2));
+            border: 1px solid var(--neon-pink);
+            color: #fca5a5;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 30px;
+            margin-bottom: 16px;
+        }
+
+        .app-title-sub {
+            font-size: 16px;
+            color: var(--neon-blue);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .company-subtitle {
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 14px;
+            padding: 16px 20px;
+            font-size: 13px;
+            color: #e2e8f0;
+            line-height: 1.7;
+        }
+
+        .path-box {
+            margin-top: 18px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--neon-purple);
+            padding: 16px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .path-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .path-label {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .path-text {
+            direction: ltr;
+            font-family: monospace;
+            font-size: 13px;
+            color: var(--neon-green);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 12px;
+            border-radius: 6px;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(244, 63, 94, 0.3);
+        }
+
+        .copy-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Glass Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 26px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        /* Step List */
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: rgba(30, 41, 59, 0.6);
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .step-num {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(192, 132, 252, 0.4);
+        }
+
+        .step-content h3 {
+            font-size: 15px;
+            color: #ffffff;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .step-content p {
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 14px;
+        }
+
+        .feature-box {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 18px;
+            transition: all 0.25 ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--neon-purple);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(192, 132, 252, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        .feature-box h4 {
+            font-size: 15px;
+            color: var(--neon-purple);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .feature-box p {
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Platforms & Links */
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .platform-card {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            border-radius: 14px;
+            padding: 14px 18px;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .platform-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
+        }
+
+        .platform-card .icon {
+            font-size: 26px;
+        }
+
+        .platform-info .title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .platform-info .url {
+            font-size: 11px;
+            color: var(--neon-blue);
+            direction: ltr;
+        }
+
+        /* Contact Us Section */
+        .contact-box {
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.2), rgba(244, 63, 94, 0.2));
+            border: 1px solid rgba(192, 132, 252, 0.4);
+            border-radius: 18px;
+            padding: 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 8px 30px rgba(244, 63, 94, 0.2);
+        }
+
+        .company-name {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--neon-pink);
+        }
+
+        .company-services {
+            font-size: 13px;
+            color: #e2e8f0;
+            max-width: 650px;
+            line-height: 1.6;
+        }
+
+        .phone-btn {
+            background: var(--neon-green);
+            color: #0f172a;
+            padding: 12px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 17px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+            transition: transform 0.2s ease;
+        }
+
+        .phone-btn:hover {
+            transform: scale(1.05);
+        }
+
+        footer {
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <span class="hero-badge">📌 راهنمای رسمی نصب و راه‌اندازی</span>
+            <h1 class="main-hero-title">آموزش و راهنمایی برای نصب و اجرای افزونه</h1>
+            <div class="app-title-sub">Smart Multi-RTL Pro | نسخه اختصاصی</div>
+            <p class="company-subtitle">توسعه داده شده توسط کمپانی مبتکران نیک افزار</p>
+
+            <div class="explanation-box" style="margin-top: 16px;">
+                💡 <b>چرا فایل‌های افزونه در سیستم شما ذخیره شدند؟</b><br>
+                به دلیل الزامات امنیتی مرورگر گوگل کروم، افزونه‌های خارج از استور رسمی باید پوشه سورس مشخصی در سیستم داشته باشند. فایل‌های افزونه به صورت خودکار در پوشه دائمی زیر ذخیره شده‌اند و نیازی به گشتن در پوشه Downloads ندارید!
+            </div>
+
+            <div class="path-box">
+                <div class="path-info">
+                    <span class="path-label">📍 مسیر دقیق پوشه افزونه در سیستم شما:</span>
+                    <span class="path-text" id="folder-path">...</span>
+                </div>
+                <button class="copy-btn" onclick="copyFolderFolder()">کپی مجدد آدرس پوشه</button>
+            </div>
+        </header>
+
+        <!-- Step-by-step Installation Guide -->
+        <div class="card">
+            <h2 class="card-title">🚀 راهنمای نصب ۳ گام در مرورگر کروم (تنها ۵ ثانیه)</h2>
+            <div class="step-list">
+                <div class="step-item">
+                    <div class="step-num">۱</div>
+                    <div class="step-content">
+                        <h3>فعال‌سازی Developer Mode</h3>
+                        <p>در صفحه <code>chrome://extensions</code> مرورگر که همزمان باز شده است، از گوشه بالا سمت راست دکمه <b>Developer mode</b> را فعال کنید.</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-num">۲</div>
+                    <div class="step-content">
+                        <h3>کلیک روی دکمه Load Unpacked</h3>
+                        <p>روی دکمه **Load unpacked** در بالا سمت چپ کلیک کنید تا پنجره انتخاب پوشه باز شود.</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-num">۳</div>
+                    <div class="step-content">
+                        <h3>جاگذاری آدرس کپی شده (Ctrl + V)</h3>
+                        <p>در کادر آدرس پنجره باز شده، کلید **Ctrl + V** را بزنید (آدرس پوشه از قبل خودکار کپی شده) و دکمه **Select Folder** را کلیک کنید.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full Feature Walkthrough -->
+        <div class="card">
+            <h2 class="card-title">✨ آموزش و امکانات پیشرفته افزونه Multi-RTL Pro</h2>
+            <div class="features-grid">
+                <div class="feature-box">
+                    <div class="feature-icon">🔍</div>
+                    <h4>تشخیص هوشمند راست‌چین</h4>
+                    <p>تشخیص خودکار متون فارسی و عربی بدون دستکاری چیدمان سایت یا کدهای برنامه‌نویسی.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">🎨</div>
+                    <h4>۶ فونت وب محبوب فارسی</h4>
+                    <p>امکان تغییر فونت متون به وزیرمتن، ایرانیکان، شبنم، صمیم، ساحل و پرستو.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">🌐</div>
+                    <h4>ترجمه ۱-کلیکه صفحه به فارسی</h4>
+                    <p>ترجمه کامل صفحات وب انگلیسی با اعمال خودکار فونت و راست‌چین‌سازی متون.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">🔍</div>
+                    <h4>تنظیم اندازه و فاصله خطوط</h4>
+                    <p>امکان بزرگ‌نمایی متون تا ۱۳۰٪ و تنظیم فاصله خطوط جهت مطالعه راحت‌تر مقالات.</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">🔢</div>
+                    <h4>تبدیل اعداد به ارقام فارسی</h4>
+                    <p>تبدیل اتوماتیک ارقام انگلیسی به ارقام زیبای فارسی (۱۲۳۴۵۶۷۸۹۰).</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="feature-icon">⇄</div>
+                    <h4>دکمه میانبر شناور (ویجت)</h4>
+                    <p>دکمه شناور روی صفحات وب جهت تغییر جهت سریع متون بدون باز کردن پاپ‌آپ.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Platforms & Social Links -->
+        <div class="card">
+            <h2 class="card-title">🌐 پلتفرم‌ها و سرویس‌های مبتکران نیک افزار</h2>
+            <div class="platforms-grid">
+                <a href="https://www.mobtakerai.ir" target="_blank" class="platform-card">
+                    <span class="icon">🤖</span>
+                    <div class="platform-info">
+                        <div class="title">پلتفرم هوش مصنوعی</div>
+                        <div class="url">mobtakerai.ir</div>
+                    </div>
+                </a>
+
+                <a href="https://bot.sekansto.ir" target="_blank" class="platform-card">
+                    <span class="icon">🎬</span>
+                    <div class="platform-info">
+                        <div class="title">پلتفرم VOD سکانستو</div>
+                        <div class="url">bot.sekansto.ir</div>
+                    </div>
+                </a>
+
+                <a href="https://Corp.mobtakerAi.ir" target="_blank" class="platform-card">
+                    <span class="icon">🌐</span>
+                    <div class="platform-info">
+                        <div class="title">وب‌سایت رسمی کمپانی</div>
+                        <div class="url">Corp.mobtakerAi.ir</div>
+                    </div>
+                </a>
+
+                <a href="https://t.me/MobtakerAi" target="_blank" class="platform-card">
+                    <span class="icon">✈️</span>
+                    <div class="platform-info">
+                        <div class="title">کانال تلگرام</div>
+                        <div class="url">t.me/MobtakerAi</div>
+                    </div>
+                </a>
+
+                <a href="https://instagram.com/mobtakerAI" target="_blank" class="platform-card">
+                    <span class="icon">📷</span>
+                    <div class="platform-info">
+                        <div class="title">اینستاگرام</div>
+                        <div class="url">instagram.com/mobtakerAI</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Contact Us Card -->
+        <div class="contact-box">
+            <div class="company-name">🏢 کمپانی مبتکران نیک افزار</div>
+            <p class="company-services">
+                توسعه‌دهنده تخصصی اپلیکیشن‌های موبایل، وب‌سایت‌های پیشرفته، DevOps و بازی‌های رایانه‌ای
+            </p>
+            <a href="tel:09120293361" class="phone-btn">
+                📞 تماس مستقیم: 09120293361
+            </a>
+        </div>
+
+        <footer>
+            © 2026 مبتکران نیک افزار | تمامی حقوق محفوظ است.
+        </footer>
+    </div>
+
+    <script>
+        // Dynamically detect or display path
+        const currentPath = window.location.pathname.replace('/guide.html', '');
+        document.getElementById('folder-path').innerText = currentPath || '%LocalAppData%\\MobtakeranNikAfzar\\MultiRTLPro';
+
+        function copyFolderFolder() {
+            const text = document.getElementById('folder-path').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('مسیر پوشه با موفقیت در کلیپ‌بورد کپی شد!');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Multi-RTL Pro | مبتکران نیک افزار</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="popup-container">
+        <!-- Registration Modal (Shown on First Launch) -->
+        <div class="registration-overlay" id="registration-overlay">
+            <div class="registration-card">
+                <div class="registration-logo">🇮🇷 🏢</div>
+                <h2 class="registration-title">فعال‌سازی افزونه Multi-RTL Pro</h2>
+                <p class="registration-desc">
+                    برای فعال‌سازی رایگان باید شماره موبایل خود را وارد کنید.
+                </p>
+                
+                <div class="country-notice">
+                    ⚠️ این افزونه تنها برای کاربران کشورهای <b>ایران، عراق، لبنان، یمن، چین و روسیه</b> فعال می‌گردد.
+                </div>
+
+                <div class="form-group">
+                    <label for="country-select">انتخاب کشور:</label>
+                    <select id="country-select" class="styled-select">
+                        <option value="IR">🇮🇷 ایران (+98 / 09...)</option>
+                        <option value="IQ">🇮🇶 عراق (+964 / 07...)</option>
+                        <option value="LB">🇱🇧 لبنان (+961)</option>
+                        <option value="YE">🇾🇪 یمن (+967)</option>
+                        <option value="CN">🇨🇳 چین (+86)</option>
+                        <option value="RU">🇷🇺 روسیه (+7)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone-input">شماره موبایل:</label>
+                    <input type="tel" id="phone-input" class="styled-input" placeholder="مثلاً: 09123456789" dir="ltr">
+                </div>
+
+                <p class="sms-notice-text">
+                    🔒 پس از وارد کردن شماره، کد فعال‌سازی برای شما ارسال می‌گردد.
+                </p>
+
+                <button id="registerSubmitBtn" class="action-btn register-btn">تایید و دریافت کد فعال‌سازی</button>
+                <div class="error-msg" id="register-error"></div>
+            </div>
+        </div>
+
+        <!-- Main Extension App UI (Unlocked after registration) -->
+        <div id="main-app-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="logo-title">
+                    <span class="icon">➡️⬅️</span>
+                    <div>
+                        <h1>Multi-RTL Pro</h1>
+                        <span class="company-badge">توسعه داده شده توسط مبتکران نیک افزار</span>
+                    </div>
+                </div>
+                <span class="version">v1.0.0</span>
+            </header>
+
+            <!-- Donate Banner Button -->
+            <a href="https://www.mobtakerai.ir/pricing" target="_blank" class="donate-banner">
+                <span class="donate-heart">❤️</span>
+                <div class="donate-text">
+                    <span class="donate-title">حمایت از توسعه‌دهنده</span>
+                    <span class="donate-sub">پرداخت مبلغ دلخواه برای پشتیبانی از این افزونه</span>
+                </div>
+                <span class="donate-arrow">◀</span>
+            </a>
+
+            <!-- Navigation Tabs -->
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="tab-settings">⚙️ تنظیمات</button>
+                <button class="tab-btn" data-tab="tab-appearance">🎨 ظاهر و فونت</button>
+                <button class="tab-btn" data-tab="tab-links">🌐 پلتفرم‌ها</button>
+                <button class="tab-btn" data-tab="tab-contact">📞 تماس</button>
+            </div>
+
+            <!-- Tab 1: Settings -->
+            <div class="tab-content active" id="tab-settings">
+                <!-- Global Switch -->
+                <div class="card toggle-card">
+                    <div class="info">
+                        <span class="label">فعال بودن افزونه</span>
+                        <span class="subtext">راست‌چین‌سازی خودکار متون</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="global-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Per Site Switch -->
+                <div class="card toggle-card">
+                    <div class="info">
+                        <span class="label">فعال در این وب‌سایت</span>
+                        <span class="subtext domain-name" id="current-domain">...</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="domain-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <!-- Full Page Translation Button -->
+                <div class="card section-card">
+                    <span class="section-label">🌍 ترجمه هوشمند کل صفحه</span>
+                    <button id="translatePageBtn" class="translate-btn">🌐 ترجمه کل صفحه به فارسی</button>
+                </div>
+
+                <!-- Alignment Mode -->
+                <div class="card section-card">
+                    <label for="mode-select" class="section-label">حالت نمایش متون</label>
+                    <select id="mode-select" class="styled-select">
+                        <option value="auto">✨ تشخیص خودکار هوشمند</option>
+                        <option value="rtl">➡️ اجبار به راست‌چین (RTL)</option>
+                        <option value="ltr">⬅️ اجبار به چپ‌چین (LTR)</option>
+                    </select>
+                </div>
+
+                <!-- Floating Widget Switch -->
+                <div class="card toggle-card">
+                    <div class="info">
+                        <span class="label">دکمه شناور روی صفحه (⇄)</span>
+                        <span class="subtext">میانبر تغییر جهت سریع در وب‌سایت</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="widget-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <button id="toggleCurrentBtn" class="action-btn">🔄 تغییر جهت المان انتخاب‌شده</button>
+                <div class="shortcut-info">
+                    <span>کلید میانبر: </span>
+                    <kbd>Alt + Shift + X</kbd>
+                </div>
+            </div>
+
+            <!-- Tab 2: Appearance & Typography -->
+            <div class="tab-content" id="tab-appearance">
+                <!-- Custom Font -->
+                <div class="card section-card">
+                    <label for="font-select" class="section-label">فونت فارسی متون</label>
+                    <select id="font-select" class="styled-select">
+                        <option value="vazir">فونت وزیرمتن (Vazirmatn)</option>
+                        <option value="yekan">فونت ایرانیکان (IRANYekan)</option>
+                        <option value="shabnam">فونت شبنم (Shabnam)</option>
+                        <option value="samim">فونت صمیم (Samim)</option>
+                        <option value="sahel">فونت ساحل (Sahel)</option>
+                        <option value="parastoo">فونت پرستو (Parastoo)</option>
+                        <option value="system">فونت اصلی وب‌سایت</option>
+                    </select>
+                </div>
+
+                <!-- Font Size -->
+                <div class="card section-card">
+                    <label for="size-select" class="section-label">اندازه متن فارسی</label>
+                    <select id="size-select" class="styled-select">
+                        <option value="100">معمولی (100%)</option>
+                        <option value="110">کمی بزرگ‌تر (110%)</option>
+                        <option value="120">بزرگ (120%)</option>
+                        <option value="130">خیلی بزرگ (130%)</option>
+                    </select>
+                </div>
+
+                <!-- Line Height -->
+                <div class="card section-card">
+                    <label for="lineheight-select" class="section-label">فاصله بین خطوط (Line Height)</label>
+                    <select id="lineheight-select" class="styled-select">
+                        <option value="normal">فاصله استاندارد</option>
+                        <option value="relaxed">فاصله راحت (1.8)</option>
+                        <option value="loose">فاصله باز و روان (2.1)</option>
+                    </select>
+                </div>
+
+                <!-- Convert Numbers -->
+                <div class="card toggle-card">
+                    <div class="info">
+                        <span class="label">تبدیل اعداد به فارسی (۱۲۳)</span>
+                        <span class="subtext">نمایش اعداد انگلیسی با ارقام فارسی</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="numbers-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Tab 3: Platforms & Social Links -->
+            <div class="tab-content" id="tab-links">
+                <div class="card section-card">
+                    <span class="section-label">🚀 پلتفرم‌ها و سرویس‌های ما</span>
+                    
+                    <a href="https://www.mobtakerai.ir" target="_blank" class="link-item">
+                        <span class="link-icon">🤖</span>
+                        <div class="link-text">
+                            <span class="link-title">پلتفرم هوش مصنوعی</span>
+                            <span class="link-url">mobtakerai.ir</span>
+                        </div>
+                    </a>
+
+                    <a href="https://bot.sekansto.ir" target="_blank" class="link-item">
+                        <span class="link-icon">🎬</span>
+                        <div class="link-text">
+                            <span class="link-title">پلتفرم VOD (سکانستو)</span>
+                            <span class="link-url">bot.sekansto.ir</span>
+                        </div>
+                    </a>
+
+                    <a href="https://Corp.mobtakerAi.ir" target="_blank" class="link-item">
+                        <span class="link-icon">🌐</span>
+                        <div class="link-text">
+                            <span class="link-title">وب‌سایت رسمی کمپانی</span>
+                            <span class="link-url">Corp.mobtakerAi.ir</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="card section-card">
+                    <span class="section-label">📲 شبکه های اجتماعی</span>
+                    <div class="social-grid">
+                        <a href="https://t.me/MobtakerAi" target="_blank" class="social-btn telegram">
+                            <span class="social-icon">✈️</span>
+                            <span>کانال تلگرام</span>
+                        </a>
+
+                        <a href="https://instagram.com/mobtakerAI" target="_blank" class="social-btn instagram">
+                            <span class="social-icon">📷</span>
+                            <span>اینستاگرام</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Contact Us -->
+            <div class="tab-content" id="tab-contact">
+                <div class="card contact-card">
+                    <div class="company-logo">🏢</div>
+                    <h2 class="contact-company-name">مبتکران نیک افزار</h2>
+                    <p class="company-description">
+                        کمپانی توسعه اپلیکیشن، وب‌سایت، DevOps و بازی‌های رایانه‌ای
+                    </p>
+
+                    <div class="contact-phone-box">
+                        <span class="phone-label">📞 شماره تماس و ارتباط:</span>
+                        <a href="tel:09120293361" class="phone-number">09120293361</a>
+                    </div>
+
+                    <a href="https://www.mobtakerai.ir/pricing" target="_blank" class="donate-btn-large">
+                        ❤️ حمایت مالی دلخواه
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer status -->
+            <footer class="footer">
+                <span class="status-msg" id="status-msg">تنظیمات با موفقیت ذخیره شد</span>
+            </footer>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
