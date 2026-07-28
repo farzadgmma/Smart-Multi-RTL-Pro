@@ -396,8 +396,23 @@ return;
 if (isLayoutContainerOrUi(el)) return;
 
 
-if ((el.tagName === 'DIV' || el.tagName === 'A') && el.children.length > 0) {
-return;
+const BLOCK_TAG_NAMES = new Set(['P', 'DIV', 'LI', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'TD', 'TH', 'LABEL', 'FIGCAPTION', 'SECTION', 'ARTICLE', 'UL', 'OL', 'TABLE', 'FORM']);
+
+function hasBlockChildren(elem) {
+    if (!elem || !elem.children) return false;
+    for (let i = 0; i < elem.children.length; i++) {
+        if (BLOCK_TAG_NAMES.has(elem.children[i].tagName)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+if (el.tagName === 'DIV' && hasBlockChildren(el)) {
+    return;
+}
+if (el.tagName === 'A' && el.children.length > 0) {
+    return;
 }
 
 
