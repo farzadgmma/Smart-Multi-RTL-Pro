@@ -11,10 +11,7 @@
     text-align: right !important;
 }
 
-/* به‌جای display:inline-block از unicode-bidi استفاده می‌شود */
-span.smart-rtl-text-right {
-    unicode-bidi: isolate !important;
-}
+
 
 .smart-rtl-text-left {
     direction: ltr !important;

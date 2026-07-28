@@ -100,7 +100,7 @@ const style = document.createElement('style');
 style.id = 'smart-rtl-style-root';
 style.textContent = `
 .smart-rtl-text-right { direction: rtl !important; text-align: right !important; }
-span.smart-rtl-text-right { unicode-bidi: isolate !important; }
+
 .smart-rtl-text-left { direction: ltr !important; text-align: left !important; }
 .smart-rtl-font-vazir { font-family: 'Vazirmatn', -apple-system, sans-serif !important; }
 .smart-rtl-font-yekan { font-family: 'IRANYekanWeb', 'B Yekan', 'Yekan', sans-serif !important; }
