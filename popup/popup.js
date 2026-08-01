@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const statusMsg = document.getElementById('status-msg');
 
     let currentDomain = '';
-    let isHttpTab = false;
 
     const getActiveTab = (cb) =>
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => cb(tabs[0]));
@@ -158,7 +157,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const urlObj = new URL(tab.url);
                 currentDomain = urlObj.hostname.toLowerCase();
                 currentDomainEl.textContent = currentDomain;
-                isHttpTab = true;
             } catch (e) {
                 currentDomainEl.textContent = 'صفحه وب';
             }
