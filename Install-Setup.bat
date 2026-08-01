@@ -11,7 +11,13 @@ echo در حال آماده‌سازی و استخراج فایل‌های اف�
 set DEST_DIR=%LOCALAPPDATA%\MobtakeranNikAfzar\MultiRTLPro
 if not exist "%DEST_DIR%" mkdir "%DEST_DIR%"
 
-xcopy /E /Y /I "%~dp0*" "%DEST_DIR%\" > nul
+rem کپی فایل‌های افزونه (بدون پوشه‌های توسعه، فایل‌های ZIP و EXE)
+robocopy "%~dp0" "%DEST_DIR%" /E /XD ".git" "scratch" /XF "*.zip" "*.exe" /NFL /NDL /NJH /NJS > nul
+if %ERRORLEVEL% GEQ 8 (
+    echo [✗] خطا در کپی فایل‌ها! لطفا دوباره تلاش کنید.
+    pause
+    exit /b 1
+)
 
 echo %DEST_DIR%| clip
 echo.

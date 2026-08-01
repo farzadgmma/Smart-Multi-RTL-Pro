@@ -1,7 +1,20 @@
 
 /**
-* Smart Multi-RTL Pro Engine v4.2
-* Fixes:
+* Smart Multi-RTL Pro Engine v4.3
+* Fixes (v4.3):
+*  - CRITICAL: fixed double-escaped unicode regexes (\\u0600...) that matched nothing,
+*    which completely broke Persian/Arabic auto-detection, RTL typing and auto mode
+*  - forced-RTL mode now applies to ALL text elements (not only Persian ones)
+*  - div/a elements with direct text + inline children are now processed
+*  - 'a' tags added to text targets
+*  - non-text inputs (checkbox/radio/hidden/...) no longer get dir changes
+*  - data-smart-rtl-ignore subtree exclusion in closest() checks
+*  - floating widget mode cycle is persisted to chrome.storage.sync
+*  - debounced fullScan (no more double full-page scan on settings save)
+*  - storage.onChanged only reacts to relevant settings keys
+*  - toggleElementDirection no longer crashes on text nodes
+*  - whenBodyReady / style injection null-safety guards
+* Fixes (v4.2):
 *  - Double injection guard (root cause of broken Persian typing)
 *  - contenteditable descendant misdetection
 *  - document_start / body-not-ready race condition
@@ -20,8 +33,8 @@ return;
 window.__SMART_RTL_PRO_ACTIVE__ = true;
 
 
-const PERSIAN_ARABIC_REGEX = /[\\u0600-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\uFB50-\\uFDFF\\uFE70-\\uFEFE]/;
-const PERSIAN_ARABIC_REGEX_G = /[\\u0600-\\u06FF\\u0750-\\u077F\\u08A0-\\u08FF\\uFB50-\\uFDFF\\uFE70-\\uFEFE]/g;
+const PERSIAN_ARABIC_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFE]/;
+const PERSIAN_ARABIC_REGEX_G = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFE]/g;
 const ENGLISH_REGEX = /[a-zA-Z]/g;
 const ENGLISH_DIGITS_REGEX = /[0-9]/g;
 const PERSIAN_DIGITS_MAP = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -114,7 +127,11 @@ span.smart-rtl-text-right { unicode-bidi: isolate !important; }
 .smart-rtl-lh-relaxed { line-height: 1.8 !important; }
 .smart-rtl-lh-loose { line-height: 2.1 !important; }
 `;
-(document.head || document.documentElement).appendChild(style);
+try {
+(document.head || document.documentElement || document).appendChild(style);
+} catch (e) {
+/* در صفحات خاص (مثل XML) تزریق استایل ممکن است ناموفق باشد — content.css پوشش می‌دهد */
+}
 }
 
 
@@ -214,11 +231,21 @@ return true;
 }
 
 
-if (el.closest('pre, code, button, nav, #smart-rtl-floating-widget')) {
+if (el.closest('pre, code, button, nav, #smart-rtl-floating-widget, [data-smart-rtl-ignore]')) {
 return true;
 }
 
 
+return false;
+}
+
+
+/* اگر المان مستقیماً متن دارد (در کنار فرزندان عنصری) */
+function hasDirectText(el) {
+for (let i = 0; i < el.childNodes.length; i++) {
+const n = el.childNodes[i];
+if (n.nodeType === Node.TEXT_NODE && n.textContent && n.textContent.trim()) return true;
+}
 return false;
 }
 
@@ -336,6 +363,13 @@ if (el.hasAttribute(MANUAL_ATTR)) return;
 if (isRichEditorArea(el)) return;
 
 
+/* اینپوت‌های غیر متنی (چک‌باکس، رادیو، دکمه، مخفی و...) را دست‌کاری نکن */
+if (el.tagName === 'INPUT') {
+const type = (el.getAttribute('type') || 'text').toLowerCase();
+if (!['text', 'search', 'tel', 'url', 'email', 'password', 'number', ''].includes(type)) return;
+}
+
+
 let val;
 if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
 val = el.value || el.getAttribute('placeholder') || '';
@@ -355,7 +389,7 @@ return;
 
 
 if (settings.mode === 'rtl') {
-if (isPersianArabicText(val)) setDirSoft(el, 'rtl');
+setDirSoft(el, 'rtl');
 return;
 }
 
@@ -396,12 +430,12 @@ return;
 if (isLayoutContainerOrUi(el)) return;
 
 
-if ((el.tagName === 'DIV' || el.tagName === 'A') && el.children.length > 0) {
+if ((el.tagName === 'DIV' || el.tagName === 'A') && el.children.length > 0 && !hasDirectText(el)) {
 return;
 }
 
 
-const isTextTarget = ['P', 'LI', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'TD', 'TH', 'LABEL', 'FIGCAPTION', 'SPAN', 'DIV'].includes(el.tagName);
+const isTextTarget = ['P', 'LI', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'TD', 'TH', 'LABEL', 'FIGCAPTION', 'SPAN', 'DIV', 'A'].includes(el.tagName);
 if (!isTextTarget) return;
 
 
@@ -410,7 +444,7 @@ if (!text || text.trim().length < 1) return;
 
 
 if (settings.mode === 'rtl') {
-if (isPersianArabicText(text)) setRtl(el);
+setRtl(el);
 } else if (settings.mode === 'ltr') {
 setLtr(el);
 } else {
@@ -460,8 +494,19 @@ removeInlineStyles();
 return;
 }
 injectInlineStyles();
-scanNodeTree(document.body);
+if (document.body) scanNodeTree(document.body);
 renderFloatingWidget();
+}
+
+
+/* اسکن کامل را دِبانس می‌کند تا چند رویداد هم‌زمان باعث اسکن‌های تکراری نشوند */
+let fullScanTimer = null;
+function scheduleFullScan() {
+if (fullScanTimer) clearTimeout(fullScanTimer);
+fullScanTimer = setTimeout(() => {
+fullScanTimer = null;
+fullScan();
+}, 150);
 }
 
 
@@ -509,6 +554,8 @@ else settings.mode = 'auto';
 
 document.body.setAttribute('data-smart-rtl-mode', settings.mode);
 fullScan();
+/* حالت انتخاب‌شده را ذخیره کن تا بعد از رفرش صفحه هم باقی بماند */
+chrome.storage.sync.set({ mode: settings.mode }).catch(() => {});
 });
 (document.body || document.documentElement).appendChild(widget);
 }
@@ -582,13 +629,23 @@ if (document.body) {
 cb();
 return;
 }
+const root = document.documentElement;
+if (!root) {
+/* خیلی زود اجرا شده — صبر کن تا DOM ساخته شود */
+if (document.readyState === 'loading') {
+document.addEventListener('DOMContentLoaded', cb, { once: true });
+} else {
+cb();
+}
+return;
+}
 const obs = new MutationObserver(() => {
 if (document.body) {
 obs.disconnect();
 cb();
 }
 });
-obs.observe(document.documentElement, { childList: true });
+obs.observe(root, { childList: true });
 }
 
 
@@ -606,6 +663,13 @@ lastContextElement = e.target;
 function toggleElementDirection(el) {
 if (isSiteDisabled()) return;
 if (!el || el === document.body) return;
+
+
+/* اگر روی گره متنی کلیک/راست‌کلیک شده باشد، به المان والد بپر */
+if (el.nodeType !== 1) {
+if (el.nodeType === Node.TEXT_NODE && el.parentElement) el = el.parentElement;
+else return;
+}
 
 
 const target =
@@ -671,7 +735,7 @@ sendResponse({ status: 'ok' });
 } else if (msg.action === 'SETTINGS_UPDATED') {
 loadSettings(() => {
 if (isSiteDisabled()) removeAllStyles();
-else fullScan();
+else scheduleFullScan();
 });
 sendResponse({ status: 'ok' });
 }
@@ -690,10 +754,19 @@ cb && cb();
 }
 
 
+const SETTINGS_KEYS = ['registered', 'enabled', 'mode', 'font', 'fontSize', 'lineHeight', 'convertNumbers', 'showWidget', 'disabledSites'];
+
 chrome.storage.onChanged.addListener((changes) => {
-for (const k in changes) settings[k] = changes[k].newValue;
+let relevant = false;
+for (const k in changes) {
+if (SETTINGS_KEYS.includes(k)) {
+settings[k] = changes[k].newValue;
+relevant = true;
+}
+}
+if (!relevant) return; // تغییرات نامرتبط (مثل userPhone) نباید اسکن کامل ایجاد کند
 if (isSiteDisabled()) removeAllStyles();
-else fullScan();
+else scheduleFullScan();
 });
 
 

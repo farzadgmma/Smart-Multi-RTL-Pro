@@ -1,6 +1,6 @@
 # Smart Multi-RTL Pro 🌐✨
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
 ![Manifest](https://img.shields.io/badge/Manifest-V3-success)
 ![Developer](https://img.shields.io/badge/Developer-Mobtaker%20NikoAfzar-purple)
 

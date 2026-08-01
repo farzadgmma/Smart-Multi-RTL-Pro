@@ -19,9 +19,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const statusMsg = document.getElementById('status-msg');
 
     let currentDomain = '';
+    let isHttpTab = false;
 
     const getActiveTab = (cb) =>
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => tabs[0] && cb(tabs[0]));
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => cb(tabs[0]));
 
     // Check Registration Status first
     chrome.storage.sync.get(['registered', 'userPhone', 'userCountry'], (res) => {
@@ -86,6 +87,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             registerSubmitBtn.disabled = true;
             registerSubmitBtn.textContent = 'در حال ثبت...';
 
+            // تایم‌اوت برای جلوگیری از گیر کردن دکمه روی «در حال ثبت...»
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
+            let offline = false;
+
             fetch('https://www.mobtakerai.ir/api/register-user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -94,9 +100,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     country: country,
                     timestamp: new Date().toISOString(),
                     app: 'Multi-RTL-Pro'
-                })
+                }),
+                signal: controller.signal
             }).catch(() => {
+                // بدون اتصال به سرور هم فعال‌سازی به صورت محلی انجام می‌شود
+                offline = true;
+                registerError.textContent = '⚠️ اتصال به سرور برقرار نشد؛ فعال‌سازی به صورت محلی ذخیره شد.';
+                registerError.style.color = '#f59e0b';
             }).finally(() => {
+                clearTimeout(timeoutId);
                 chrome.storage.sync.set({
                     registered: true,
                     userPhone: phone,
@@ -104,7 +116,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }, () => {
                     registrationOverlay.classList.add('hidden');
                     notifyContentScript();
-                    chrome.tabs.create({ url: 'https://www.mobtakerai.ir/ChromeExtantion/guide.html' });
+                    // اگر آفلاین بود، اجازه بده پیام دیده شود بعد راهنما باز شود
+                    const openGuide = () => chrome.tabs.create({ url: chrome.runtime.getURL('guide.html') });
+                    if (offline) setTimeout(openGuide, 1500);
+                    else openGuide();
                 });
             });
         });
@@ -135,13 +150,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Get current tab domain
+    // Get current tab domain first, then load settings
+    // (ترتیب مهم است تا وضعیت «فعال در این وب‌سایت» درست نمایش داده شود)
     getActiveTab((tab) => {
         if (tab && tab.url && tab.url.startsWith('http')) {
             try {
                 const urlObj = new URL(tab.url);
                 currentDomain = urlObj.hostname.toLowerCase();
                 currentDomainEl.textContent = currentDomain;
+                isHttpTab = true;
             } catch (e) {
                 currentDomainEl.textContent = 'صفحه وب';
             }
@@ -149,35 +166,35 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentDomainEl.textContent = 'صفحه مرورگر';
             domainToggle.disabled = true;
         }
-    });
 
-    // Load initial settings
-    chrome.storage.sync.get({
-        enabled: true,
-        font: 'vazir',
-        mode: 'auto',
-        fontSize: '100',
-        lineHeight: 'normal',
-        convertNumbers: false,
-        showWidget: false,
-        disabledSites: []
-    }, (stored) => {
-        globalToggle.checked = stored.enabled;
-        modeSelect.value = stored.mode || 'auto';
-        fontSelect.value = stored.font || 'vazir';
-        sizeSelect.value = stored.fontSize || '100';
-        lineheightSelect.value = stored.lineHeight || 'normal';
-        numbersToggle.checked = !!stored.convertNumbers;
-        widgetToggle.checked = !!stored.showWidget;
+        // Load initial settings (فقط بعد از مشخص شدن دامنه)
+        chrome.storage.sync.get({
+            enabled: true,
+            font: 'vazir',
+            mode: 'auto',
+            fontSize: '100',
+            lineHeight: 'normal',
+            convertNumbers: false,
+            showWidget: false,
+            disabledSites: []
+        }, (stored) => {
+            globalToggle.checked = stored.enabled;
+            modeSelect.value = stored.mode || 'auto';
+            fontSelect.value = stored.font || 'vazir';
+            sizeSelect.value = stored.fontSize || '100';
+            lineheightSelect.value = stored.lineHeight || 'normal';
+            numbersToggle.checked = !!stored.convertNumbers;
+            widgetToggle.checked = !!stored.showWidget;
 
-        if (currentDomain) {
-            const isDisabled = Array.isArray(stored.disabledSites) && stored.disabledSites.some(site => {
-                const s = site.toLowerCase().trim();
-                return currentDomain === s || currentDomain.endsWith('.' + s) || s.endsWith('.' + currentDomain);
-            });
-            domainToggle.checked = !isDisabled;
-        }
-        updateUiState();
+            if (currentDomain) {
+                const isDisabled = Array.isArray(stored.disabledSites) && stored.disabledSites.some(site => {
+                    const s = site.toLowerCase().trim();
+                    return currentDomain === s || currentDomain.endsWith('.' + s) || s.endsWith('.' + currentDomain);
+                });
+                domainToggle.checked = !isDisabled;
+            }
+            updateUiState();
+        });
     });
 
 
@@ -250,6 +267,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function notifyContentScript() {
         getActiveTab((tab) => {
+            if (!tab || !tab.id) return;
             chrome.tabs.sendMessage(tab.id, { action: 'SETTINGS_UPDATED' }).catch(() => {});
         });
     }
@@ -265,6 +283,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (translatePageBtn) {
         translatePageBtn.addEventListener('click', () => {
             getActiveTab((tab) => {
+                if (!tab || !tab.id) return;
                 chrome.tabs.sendMessage(tab.id, { action: 'TRANSLATE_PAGE_FA' }).catch(() => {});
             });
         });
@@ -273,6 +292,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (toggleCurrentBtn) {
         toggleCurrentBtn.addEventListener('click', () => {
             getActiveTab((tab) => {
+                if (!tab || !tab.id) return;
                 chrome.tabs.sendMessage(tab.id, { action: 'TOGGLE_CURRENT_ELEMENT_RTL' }).catch(() => {});
             });
         });
