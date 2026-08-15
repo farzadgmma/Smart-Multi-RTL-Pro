@@ -278,6 +278,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    const inspectorBtn = document.getElementById('inspectorBtn');
+    if (inspectorBtn) {
+        inspectorBtn.addEventListener('click', () => {
+            getActiveTab((tab) => {
+                chrome.tabs.sendMessage(tab.id, { action: 'toggleInspector' }, (res) => {
+                    if (res && res.active) {
+                        inspectorBtn.textContent = '❌ توقف انتخاب دستی';
+                        inspectorBtn.style.backgroundColor = '#ef4444';
+                    } else {
+                        inspectorBtn.textContent = '🎯 انتخاب و راست‌چین دستی با موس';
+                        inspectorBtn.style.backgroundColor = '#6366f1';
+                    }
+                });
+            });
+        });
+    }
+
     // Event Listeners
     globalToggle.addEventListener('change', saveSettings);
     domainToggle.addEventListener('change', saveSettings);

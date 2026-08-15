@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Smart Multi-RTL Pro | مبتکران نیک افزار",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "افزونه هوشمند راست‌چین‌سازی خودکار و پیشرفته متون فارسی و عربی - توسعه داده شده توسط کمپانی مبتکران نیک افزار",
   "permissions": [
     "storage",
@@ -26,9 +26,10 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"],
+      "js": ["content.js", "inspector.js"],
       "css": ["content.css"],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "all_frames": true
     }
   ],
   "commands": {
@@ -37,6 +38,12 @@
         "default": "Alt+Shift+X"
       },
       "description": "تغییر جهت (RTL/LTR) المان تحت فوکوس یا متن انتخابی"
+    },
+    "toggle-inspector": {
+      "suggested_key": {
+        "default": "Ctrl+Space"
+      },
+      "description": "فعال‌سازی حالت انتخاب و راست‌چین دستی با موس"
     }
   },
   "icons": {

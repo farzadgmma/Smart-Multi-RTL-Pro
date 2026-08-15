@@ -1,35 +1,44 @@
-/* Smart Multi-RTL Pro CSS v3.2 (Fixed) */
+/* Smart Multi-RTL Pro CSS v4.5 */
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.2/dist/font-face.css');
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/samim-font@v4.0.5/dist/font-face.css');
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/sahel-font@v3.4.0/dist/font-face.css');
 @import url('https://cdn.jsdelivr.net/gh/rastikerdar/parastoo-font@v1.0.0-alpha5/dist/font-face.css');
 
-/* Text Direction Rules — عمومی */
-.smart-rtl-text-right {
+/* Text Direction Rules — High Specificity */
+html body .smart-rtl-text-right,
+html body [dir="rtl"].smart-rtl-text-right,
+html body [data-smart-rtl-dir="true"].smart-rtl-text-right {
     direction: rtl !important;
     text-align: right !important;
+    unicode-bidi: isolate !important;
 }
 
-
-
-.smart-rtl-text-left {
+html body .smart-rtl-text-left,
+html body [dir="ltr"].smart-rtl-text-left,
+html body [data-smart-rtl-dir="true"].smart-rtl-text-left {
     direction: ltr !important;
     text-align: left !important;
+    unicode-bidi: isolate !important;
 }
 
-/* هرگز داخل ادیتورهای غنی دست‌کاری نکن (لایه‌ی دفاعی دوم) */
-.ql-editor .smart-rtl-text-right,
-.ProseMirror .smart-rtl-text-right,
-.DraftEditor-root .smart-rtl-text-right,
-[data-slate-editor="true"] .smart-rtl-text-right,
-.monaco-editor .smart-rtl-text-right,
-.CodeMirror .smart-rtl-text-right {
-    all: revert !important;
+/* List RTL adjustments */
+ul.smart-rtl-text-right,
+ol.smart-rtl-text-right {
+    direction: rtl !important;
+    text-align: right !important;
+    padding-right: 24px !important;
+    padding-left: 0 !important;
+}
+
+li.smart-rtl-text-right {
+    direction: rtl !important;
+    text-align: right !important;
+    unicode-bidi: isolate !important;
 }
 
 /* Font Families */
-.smart-rtl-font-vazir { font-family: 'Vazirmatn', -apple-system, sans-serif !important; }
+.smart-rtl-font-vazir { font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; }
 .smart-rtl-font-yekan { font-family: 'IRANYekanWeb', 'B Yekan', 'Yekan', 'Vazirmatn', sans-serif !important; }
 .smart-rtl-font-shabnam { font-family: 'Shabnam', 'Vazirmatn', sans-serif !important; }
 .smart-rtl-font-samim { font-family: 'Samim', 'Vazirmatn', sans-serif !important; }
@@ -73,4 +82,12 @@
 #smart-rtl-floating-widget:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.7);
+}
+
+/* Inspector Mode Styles */
+.smart-rtl-inspector-hover {
+    outline: 2px dashed #6366f1 !important;
+    background-color: rgba(99, 102, 241, 0.15) !important;
+    cursor: crosshair !important;
+    transition: outline 0.1s ease, background-color 0.1s ease;
 }

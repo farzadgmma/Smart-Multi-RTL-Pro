@@ -25,7 +25,7 @@ files: ['content.css']
 
 chrome.scripting.executeScript({
 target: { tabId: tab.id, allFrames: true },
-files: ['content.js']
+files: ['content.js', 'inspector.js']
 }).catch(() => {});
 }
 
@@ -77,6 +77,12 @@ if (command === 'toggle-rtl') {
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 if (tabs[0] && tabs[0].id) {
 chrome.tabs.sendMessage(tabs[0].id, { action: 'TOGGLE_CURRENT_ELEMENT_RTL' }).catch(() => {});
+}
+});
+} else if (command === 'toggle-inspector') {
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+if (tabs[0] && tabs[0].id) {
+chrome.tabs.sendMessage(tabs[0].id, { action: 'toggleInspector' }).catch(() => {});
 }
 });
 }
