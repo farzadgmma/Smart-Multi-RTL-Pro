@@ -61,8 +61,11 @@
     let lastContextElement = null;
 
     const FONT_CLASSES = [
-        'smart-rtl-font-vazir', 'smart-rtl-font-yekan', 'smart-rtl-font-shabnam',
-        'smart-rtl-font-samim', 'smart-rtl-font-sahel', 'smart-rtl-font-parastoo'
+        'smart-rtl-font-vazir', 'smart-rtl-font-yekan', 'smart-rtl-font-estedad',
+        'smart-rtl-font-dana', 'smart-rtl-font-shabnam', 'smart-rtl-font-tanha',
+        'smart-rtl-font-gandom', 'smart-rtl-font-nahid', 'smart-rtl-font-samim',
+        'smart-rtl-font-sahel', 'smart-rtl-font-parastoo', 'smart-rtl-font-notosans',
+        'smart-rtl-font-nazanin', 'smart-rtl-font-mitra', 'smart-rtl-font-yagut'
     ];
 
     const isSiteDisabled = () => {
@@ -97,11 +100,20 @@
             .smart-rtl-text-left { direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important; }
             ul.smart-rtl-text-right, ol.smart-rtl-text-right { direction: rtl !important; text-align: right !important; padding-right: 24px !important; padding-left: 0 !important; }
             .smart-rtl-font-vazir { font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; }
-            .smart-rtl-font-yekan { font-family: 'IRANYekanWeb', 'B Yekan', 'Yekan', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-yekan { font-family: 'IRANYekanWeb', 'IRANYekan', 'B Yekan', 'Yekan', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-estedad { font-family: 'Estedad', 'IRANYekan', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-dana { font-family: 'Dana', 'IRANYekan', 'Vazirmatn', sans-serif !important; }
             .smart-rtl-font-shabnam { font-family: 'Shabnam', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-tanha { font-family: 'Tanha', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-gandom { font-family: 'Gandom', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-nahid { font-family: 'Nahid', 'Vazirmatn', sans-serif !important; }
             .smart-rtl-font-samim { font-family: 'Samim', 'Vazirmatn', sans-serif !important; }
             .smart-rtl-font-sahel { font-family: 'Sahel', 'Vazirmatn', sans-serif !important; }
             .smart-rtl-font-parastoo { font-family: 'Parastoo', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-notosans { font-family: 'Noto Sans Arabic', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-nazanin { font-family: 'B Nazanin', 'IRANNazanin', 'Nazanin', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-mitra { font-family: 'B Mitra', 'IRANMitra', 'Mitra', 'Vazirmatn', sans-serif !important; }
+            .smart-rtl-font-yagut { font-family: 'B Yagut', 'IRANYagut', 'Yagut', 'Vazirmatn', sans-serif !important; }
             .smart-rtl-size-110 { font-size: 110% !important; }
             .smart-rtl-size-120 { font-size: 120% !important; }
             .smart-rtl-size-130 { font-size: 130% !important; }
