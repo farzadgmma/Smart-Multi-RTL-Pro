@@ -213,25 +213,34 @@
     };
 
     /* ---------------------------------------------------------
-     * Set/Clear direction for block elements
+     * Set/Clear direction for block elements (Optimized Fast-Path)
      * --------------------------------------------------------- */
     function setRtl(el) {
         if (isSiteDisabled()) return;
 
-        if (el.getAttribute('dir') !== 'rtl') {
+        const isNative = isNativeRtlSite();
+        const hasRightClass = el.classList.contains('smart-rtl-text-right');
+        const hasDirRtl = el.getAttribute('dir') === 'rtl';
+
+        // Fast path: if already fully configured for RTL, exit immediately with zero layout cost!
+        if (hasDirRtl && (isNative || hasRightClass) && (!el.style || el.style.direction === 'rtl')) {
+            return;
+        }
+
+        if (!hasDirRtl) {
             el.setAttribute('dir', 'rtl');
             el.setAttribute(OWN_DIR_ATTR, 'true');
         }
 
-        if (!isNativeRtlSite() && !el.classList.contains('smart-rtl-text-right')) {
+        if (!isNative && !hasRightClass) {
             el.classList.add('smart-rtl-text-right');
         }
         el.classList.remove('smart-rtl-text-left');
 
         if (el.style) {
-            el.style.setProperty('direction', 'rtl', 'important');
-            el.style.setProperty('text-align', 'right', 'important');
-            el.style.setProperty('unicode-bidi', 'isolate', 'important');
+            if (el.style.direction !== 'rtl') el.style.setProperty('direction', 'rtl', 'important');
+            if (el.style.textAlign !== 'right') el.style.setProperty('text-align', 'right', 'important');
+            if (el.style.unicodeBidi !== 'isolate') el.style.setProperty('unicode-bidi', 'isolate', 'important');
         }
 
         applyStylesAndFont(el);
@@ -255,16 +264,26 @@
 
     function setLtr(el) {
         if (isSiteDisabled()) return;
-        if (el.getAttribute('dir') !== 'ltr') {
+
+        const hasLeftClass = el.classList.contains('smart-rtl-text-left');
+        const hasDirLtr = el.getAttribute('dir') === 'ltr';
+
+        // Fast path: if already fully configured for LTR, exit immediately!
+        if (hasDirLtr && hasLeftClass && (!el.style || el.style.direction === 'ltr')) {
+            return;
+        }
+
+        if (!hasDirLtr) {
             el.setAttribute('dir', 'ltr');
             el.setAttribute(OWN_DIR_ATTR, 'true');
         }
-        if (!el.classList.contains('smart-rtl-text-left')) el.classList.add('smart-rtl-text-left');
+        if (!hasLeftClass) el.classList.add('smart-rtl-text-left');
         el.classList.remove('smart-rtl-text-right');
+
         if (el.style) {
-            el.style.setProperty('direction', 'ltr', 'important');
-            el.style.setProperty('text-align', 'left', 'important');
-            el.style.setProperty('unicode-bidi', 'isolate', 'important');
+            if (el.style.direction !== 'ltr') el.style.setProperty('direction', 'ltr', 'important');
+            if (el.style.textAlign !== 'left') el.style.setProperty('text-align', 'left', 'important');
+            if (el.style.unicodeBidi !== 'isolate') el.style.setProperty('unicode-bidi', 'isolate', 'important');
             el.style.removeProperty('font-family');
         }
         FONT_CLASSES.forEach(cls => el.classList.remove(cls));
@@ -373,6 +392,15 @@
         const text = el.textContent || '';
         if (!text || text.trim().length < 1) return;
 
+        // Ultra-fast streaming guard: If element already has correct direction, exit immediately!
+        const currentDir = el.getAttribute('dir');
+        if (currentDir === 'rtl' && isPersianArabicText(text)) {
+            return;
+        }
+        if (currentDir === 'ltr' && isPureEnglishText(text)) {
+            return;
+        }
+
         // Handle List containers (UL / OL)
         if (el.tagName === 'UL' || el.tagName === 'OL') {
             if (isPersianArabicText(text)) {
@@ -400,15 +428,21 @@
     }
 
     /* ---------------------------------------------------------
-     * DOM Tree Scanning
+     * DOM Tree Scanning (Optimized for 60/120fps)
      * --------------------------------------------------------- */
     function scanNodeTree(root) {
-        if (isSiteDisabled() || !root) return;
+        if (isSiteDisabled() || !root || !root.isConnected) return;
 
         if (root.nodeType === 1) {
             if (isCodeOrEditorArea(root) || isInsideEditableDescendant(root)) return;
 
             processElement(root);
+
+            // Leaf text blocks never contain other TARGET_SELECTOR blocks.
+            // Avoid calling expensive querySelectorAll on every P, LI, H1-H6!
+            if (root.tagName === 'P' || root.tagName === 'LI' || root.tagName.startsWith('H') || root.tagName === 'BLOCKQUOTE') {
+                return;
+            }
 
             const nodes = root.querySelectorAll
                 ? root.querySelectorAll(`${TARGET_SELECTOR}, ${EDITABLE_SELECTOR}`)
@@ -508,10 +542,41 @@
     }
 
     /* ---------------------------------------------------------
-     * MutationObserver (Throttled for performance)
+     * MutationObserver (High Performance rAF + Throttling)
      * --------------------------------------------------------- */
     let pendingNodes = new Set();
-    let timer = null;
+    let scheduledRaf = null;
+    let lastScanTime = 0;
+    const THROTTLE_MS = 60; // Max ~16 scans per second, keeps main thread at 60/120fps
+
+    function scheduleBatchScan() {
+        if (scheduledRaf) return;
+
+        scheduledRaf = requestAnimationFrame(() => {
+            const now = performance.now();
+            const elapsed = now - lastScanTime;
+            const remaining = Math.max(0, THROTTLE_MS - elapsed);
+
+            setTimeout(() => {
+                scheduledRaf = null;
+                lastScanTime = performance.now();
+
+                if (!pendingNodes.size) return;
+                const nodes = Array.from(pendingNodes);
+                pendingNodes.clear();
+
+                for (let i = 0; i < nodes.length; i++) {
+                    const node = nodes[i];
+                    if (!node || !node.isConnected) continue;
+                    scanNodeTree(node);
+                }
+
+                if (cachedManualSelectors && cachedManualSelectors.length) {
+                    applyManualSelectors(cachedManualSelectors);
+                }
+            }, remaining);
+        });
+    }
 
     const observer = new MutationObserver((mutations) => {
         if (!isExtensionValid()) {
@@ -522,7 +587,6 @@
 
         for (let i = 0; i < mutations.length; i++) {
             const m = mutations[i];
-            let targetEl = null;
 
             if (m.type === 'childList') {
                 for (let j = 0; j < m.addedNodes.length; j++) {
@@ -530,55 +594,34 @@
                     if (node.nodeType === 1) {
                         if (isCodeOrEditorArea(node) || isInsideEditableDescendant(node)) continue;
                         pendingNodes.add(node);
-                        const closestTarget = node.closest && node.closest(TARGET_SELECTOR);
-                        if (closestTarget && closestTarget !== node) pendingNodes.add(closestTarget);
                     } else if (node.nodeType === 3 && node.parentElement) {
-                        if (isCodeOrEditorArea(node.parentElement) || isInsideEditableDescendant(node.parentElement)) continue;
-                        pendingNodes.add(node.parentElement);
-                        const closestTarget = node.parentElement.closest && node.parentElement.closest(TARGET_SELECTOR);
-                        if (closestTarget && closestTarget !== node.parentElement) pendingNodes.add(closestTarget);
+                        const parent = node.parentElement;
+                        if (isCodeOrEditorArea(parent) || isInsideEditableDescendant(parent)) continue;
+                        const block = parent.closest ? parent.closest(TARGET_SELECTOR) : parent;
+                        if (block) pendingNodes.add(block);
                     }
                 }
-                continue;
             } else if (m.type === 'characterData' && m.target.parentElement) {
-                targetEl = m.target.parentElement;
-            } else if (m.type === 'attributes') {
-                targetEl = m.target;
-            }
-
-            if (targetEl) {
-                if (isCodeOrEditorArea(targetEl) || isInsideEditableDescendant(targetEl)) continue;
-                pendingNodes.add(targetEl);
-                const closestTarget = targetEl.closest && targetEl.closest(TARGET_SELECTOR);
-                if (closestTarget && closestTarget !== targetEl) {
-                    pendingNodes.add(closestTarget);
-                }
+                const parent = m.target.parentElement;
+                if (isCodeOrEditorArea(parent) || isInsideEditableDescendant(parent)) continue;
+                const block = parent.closest ? parent.closest(TARGET_SELECTOR) : parent;
+                if (block) pendingNodes.add(block);
             }
         }
 
-        if (pendingNodes.size && !timer) {
-            timer = setTimeout(() => {
-                const nodes = [...pendingNodes];
-                pendingNodes.clear();
-                timer = null;
-                nodes.forEach(scanNodeTree);
-
-                // Apply in-memory cached selectors without IPC calls
-                if (cachedManualSelectors && cachedManualSelectors.length) {
-                    applyManualSelectors(cachedManualSelectors);
-                }
-            }, 80);
+        if (pendingNodes.size && !scheduledRaf) {
+            scheduleBatchScan();
         }
     });
 
     function startObserving() {
         if (document.body && isExtensionValid()) {
+            // Observe DOM additions and character streaming.
+            // Attributes are deliberately omitted to eliminate self-triggering feedback loops!
             observer.observe(document.body, {
                 childList: true,
                 subtree: true,
-                characterData: true,
-                attributes: true,
-                attributeFilter: ['class', 'style', 'dir']
+                characterData: true
             });
         }
     }
