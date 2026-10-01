@@ -46,20 +46,15 @@ injectIntoTab(tab);
 
 
 chrome.runtime.onInstalled.addListener((details) => {
-setupContextMenu();
+    setupContextMenu();
 
-
-chrome.tabs.query({ url: ['http://*/*', 'https://*/*'] }, (tabs) => {
-for (const tab of tabs) {
-if (details.reason === 'install') {
-// نصب تازه: مطمئناً هیچ تبی content script ندارد
-injectIntoTab(tab);
-} else {
-// آپدیت/ری‌لود: احتمالاً بعضی تب‌ها از قبل content script فعال دارند
-injectIfNotPresent(tab);
-}
-}
-});
+    // High Performance: Only inject into the active tab in the focused window
+    // This stops the catastrophic 50-tab simultaneous injection storm!
+    chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+        if (tabs && tabs[0] && tabs[0].id) {
+            injectIfNotPresent(tabs[0]);
+        }
+    });
 });
 
 

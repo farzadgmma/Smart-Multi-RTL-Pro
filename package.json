@@ -1,0 +1,60 @@
+{
+  "name": "@mobtakerai/rtl-pro",
+  "version": "1.2.0",
+  "description": "High-performance, zero-latency Persian & Arabic smart auto-RTL engine and typography optimizer for web applications and browser extensions.",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "content.css",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node test/index.test.js",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/farzadgmma/Smart-Multi-RTL-Pro.git"
+  },
+  "keywords": [
+    "rtl",
+    "persian",
+    "arabic",
+    "farsi",
+    "direction",
+    "auto-rtl",
+    "bidi",
+    "unicode-bidi",
+    "vazirmatn",
+    "typography",
+    "chrome-extension",
+    "mobtakerai"
+  ],
+  "author": "MobtakerAi (مبتکران نیک افزار)",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/farzadgmma/Smart-Multi-RTL-Pro/issues"
+  },
+  "homepage": "https://github.com/farzadgmma/Smart-Multi-RTL-Pro#readme",
+  "sideEffects": [
+    "*.css"
+  ]
+}

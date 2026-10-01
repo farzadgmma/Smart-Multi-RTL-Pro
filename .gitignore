@@ -1,3 +1,5 @@
 scratch/
 *.zip
 sonnet*.md
+node_modules/
+*.log

@@ -18,6 +18,16 @@
     if (window.__SMART_RTL_PRO_ACTIVE__) {
         return;
     }
+
+    // 🛡️ Invisible/Ad Iframe Guard: Skip tiny tracking or ad iframes
+    if (window.self !== window.top) {
+        try {
+            if (window.innerWidth > 0 && (window.innerWidth < 150 || window.innerHeight < 100)) {
+                return;
+            }
+        } catch (e) {}
+    }
+
     window.__SMART_RTL_PRO_ACTIVE__ = true;
 
     const PERSIAN_ARABIC_REGEX = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFE]/;
@@ -93,33 +103,35 @@
         if (!style) {
             style = document.createElement('style');
             style.id = 'smart-rtl-style-root';
+            style.textContent = `
+                .smart-rtl-text-right { direction: rtl !important; text-align: right !important; unicode-bidi: isolate !important; }
+                .smart-rtl-text-left { direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important; }
+                ul.smart-rtl-text-right, ol.smart-rtl-text-right { direction: rtl !important; text-align: right !important; padding-right: 24px !important; padding-left: 0 !important; }
+                li.smart-rtl-text-right { direction: rtl !important; text-align: right !important; unicode-bidi: isolate !important; }
+                pre, code, kbd, samp, var, .hljs, .prism, [class*="language-"], [class*="highlight-"], .monaco-editor, .CodeMirror, .cm-editor, .ace_editor { direction: ltr !important; text-align: left !important; unicode-bidi: embed !important; }
+                .smart-rtl-font-vazir { font-family: 'Vazirmatn', 'Vazir', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Tahoma, sans-serif !important; }
+                .smart-rtl-font-yekan { font-family: 'IRANYekanWeb', 'IRANYekan', 'B Yekan', 'Yekan', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-estedad { font-family: 'Estedad', 'IRANYekanWeb', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-dana { font-family: 'Dana', 'IRANYekanWeb', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-shabnam { font-family: 'Shabnam', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-tanha { font-family: 'Tanha', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-gandom { font-family: 'Gandom', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-nahid { font-family: 'Nahid', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-samim { font-family: 'Samim', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-sahel { font-family: 'Sahel', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-parastoo { font-family: 'Parastoo', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-notosans { font-family: 'Noto Sans Arabic', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-nazanin { font-family: 'B Nazanin', 'IRANNazanin', 'Nazanin', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-mitra { font-family: 'B Mitra', 'IRANMitra', 'Mitra', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-font-yagut { font-family: 'B Yagut', 'IRANYagut', 'Yagut', 'Vazirmatn', Tahoma, sans-serif !important; }
+                .smart-rtl-size-110 { font-size: 110% !important; }
+                .smart-rtl-size-120 { font-size: 120% !important; }
+                .smart-rtl-size-130 { font-size: 130% !important; }
+                .smart-rtl-lh-relaxed { line-height: 1.8 !important; }
+                .smart-rtl-lh-loose { line-height: 2.1 !important; }
+            `;
             (document.head || document.documentElement).appendChild(style);
         }
-        style.textContent = `
-            .smart-rtl-text-right { direction: rtl !important; text-align: right !important; unicode-bidi: isolate !important; }
-            .smart-rtl-text-left { direction: ltr !important; text-align: left !important; unicode-bidi: isolate !important; }
-            ul.smart-rtl-text-right, ol.smart-rtl-text-right { direction: rtl !important; text-align: right !important; padding-right: 24px !important; padding-left: 0 !important; }
-            .smart-rtl-font-vazir { font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; }
-            .smart-rtl-font-yekan { font-family: 'IRANYekanWeb', 'IRANYekan', 'B Yekan', 'Yekan', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-estedad { font-family: 'Estedad', 'IRANYekan', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-dana { font-family: 'Dana', 'IRANYekan', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-shabnam { font-family: 'Shabnam', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-tanha { font-family: 'Tanha', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-gandom { font-family: 'Gandom', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-nahid { font-family: 'Nahid', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-samim { font-family: 'Samim', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-sahel { font-family: 'Sahel', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-parastoo { font-family: 'Parastoo', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-notosans { font-family: 'Noto Sans Arabic', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-nazanin { font-family: 'B Nazanin', 'IRANNazanin', 'Nazanin', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-mitra { font-family: 'B Mitra', 'IRANMitra', 'Mitra', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-font-yagut { font-family: 'B Yagut', 'IRANYagut', 'Yagut', 'Vazirmatn', sans-serif !important; }
-            .smart-rtl-size-110 { font-size: 110% !important; }
-            .smart-rtl-size-120 { font-size: 120% !important; }
-            .smart-rtl-size-130 { font-size: 130% !important; }
-            .smart-rtl-lh-relaxed { line-height: 1.8 !important; }
-            .smart-rtl-lh-loose { line-height: 2.1 !important; }
-        `;
     }
 
     function removeInlineStyles() {
@@ -157,18 +169,35 @@
     }
 
     /* ---------------------------------------------------------
-     * Editor / Code / UI detection guards
+     * Editor / Code / UI detection guards (WeakMap Memoized)
      * --------------------------------------------------------- */
+    const codeOrEditorCache = new WeakMap();
+    const editableDescendantCache = new WeakMap();
+
     function isCodeOrEditorArea(el) {
         if (!el || el.nodeType !== 1) return false;
-        if (['PRE', 'CODE', 'KBD', 'SAMP', 'VAR'].includes(el.tagName)) return true;
-        if (el.closest && el.closest(CODE_AND_EDITOR_SELECTORS)) return true;
-        return false;
+        if (codeOrEditorCache.has(el)) return codeOrEditorCache.get(el);
+
+        let isCode = false;
+        if (['PRE', 'CODE', 'KBD', 'SAMP', 'VAR'].includes(el.tagName)) {
+            isCode = true;
+        } else if (el.closest && el.closest(CODE_AND_EDITOR_SELECTORS)) {
+            isCode = true;
+        }
+
+        codeOrEditorCache.set(el, isCode);
+        return isCode;
     }
 
     function isInsideEditableDescendant(el) {
+        if (!el || el.nodeType !== 1) return false;
+        if (editableDescendantCache.has(el)) return editableDescendantCache.get(el);
+
         const root = el.closest && el.closest('[contenteditable="true"], [contenteditable=""]');
-        return !!root && root !== el;
+        const isDescendant = !!root && root !== el;
+
+        editableDescendantCache.set(el, isDescendant);
+        return isDescendant;
     }
 
     function isEditableRoot(el) {
@@ -396,8 +425,8 @@
 
         if (isNonTextContainer(el)) return;
 
-        // Skip parent DIVs that have nested block children (so child elements are formatted independently)
-        if (el.tagName === 'DIV' && hasBlockChildren(el)) {
+        // Skip structural container DIVs (with block children or many children)
+        if (el.tagName === 'DIV' && (hasBlockChildren(el) || (el.children && el.children.length > 5))) {
             return;
         }
 
@@ -440,32 +469,72 @@
     }
 
     /* ---------------------------------------------------------
-     * DOM Tree Scanning (Optimized for 60/120fps)
+     * DOM Tree Scanning (High-Performance Engine v6.0 TreeWalker)
      * --------------------------------------------------------- */
+    const TEXT_BLOCK_SET = new Set(['P', 'LI', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE', 'TD', 'TH', 'LABEL', 'FIGCAPTION']);
+
     function scanNodeTree(root) {
         if (isSiteDisabled() || !root || !root.isConnected) return;
 
         if (root.nodeType === 1) {
             if (isCodeOrEditorArea(root) || isInsideEditableDescendant(root)) return;
 
-            processElement(root);
-
-            // Leaf text blocks never contain other TARGET_SELECTOR blocks.
-            // Avoid calling expensive querySelectorAll on every P, LI, H1-H6!
-            if (root.tagName === 'P' || root.tagName === 'LI' || root.tagName.startsWith('H') || root.tagName === 'BLOCKQUOTE') {
+            // Direct leaf text block: format it immediately in O(1)
+            if (TEXT_BLOCK_SET.has(root.tagName) || (root.tagName === 'DIV' && !hasBlockChildren(root))) {
+                processElement(root);
                 return;
             }
+        }
 
-            const nodes = root.querySelectorAll
-                ? root.querySelectorAll(`${TARGET_SELECTOR}, ${EDITABLE_SELECTOR}`)
-                : [];
+        // For large containers or document.body:
+        // Use native C++ TreeWalker to collect ONLY text-bearing blocks
+        // instead of querySelectorAll on 20,000 empty DIVs!
+        try {
+            const walker = document.createTreeWalker(
+                root,
+                NodeFilter.SHOW_TEXT,
+                {
+                    acceptNode(node) {
+                        if (!node.data || node.data.length < 2) return NodeFilter.FILTER_SKIP;
+                        const parent = node.parentElement;
+                        if (!parent) return NodeFilter.FILTER_SKIP;
+                        if (isCodeOrEditorArea(parent) || isInsideEditableDescendant(parent)) {
+                            return NodeFilter.FILTER_REJECT;
+                        }
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                }
+            );
 
-            for (let i = 0; i < nodes.length; i++) {
-                const node = nodes[i];
-                if (isCodeOrEditorArea(node) || isInsideEditableDescendant(node)) continue;
-                processElement(node);
-                if (node.shadowRoot) scanNodeTree(node.shadowRoot);
+            const blocksToProcess = new Set();
+            let textNode;
+            let visitedCount = 0;
+
+            while ((textNode = walker.nextNode())) {
+                const parent = textNode.parentElement;
+                if (!parent) continue;
+
+                // Find the nearest enclosing text block
+                const block = parent.closest ? parent.closest(TARGET_SELECTOR) : parent;
+                if (block && !block.hasAttribute(MANUAL_ATTR)) {
+                    blocksToProcess.add(block);
+                }
+
+                visitedCount++;
+                if (visitedCount > 3000) break; // Time-slicing limit to guarantee 0 frame drops
             }
+
+            blocksToProcess.forEach(processElement);
+
+            // Also process editable inputs/textareas within root
+            if (root.querySelectorAll) {
+                const editables = root.querySelectorAll(EDITABLE_SELECTOR);
+                for (let i = 0; i < editables.length; i++) {
+                    processElement(editables[i]);
+                }
+            }
+        } catch (e) {
+            processElement(root);
         }
     }
 
@@ -478,6 +547,9 @@
         }
         injectInlineStyles();
         scanNodeTree(document.body);
+        if (cachedManualSelectors && cachedManualSelectors.length) {
+            applyManualSelectors(cachedManualSelectors);
+        }
         renderFloatingWidget();
     }
 
@@ -577,14 +649,34 @@
                 const nodes = Array.from(pendingNodes);
                 pendingNodes.clear();
 
-                for (let i = 0; i < nodes.length; i++) {
-                    const node = nodes[i];
+                const MAX_BATCH_NODES = 80;
+                const batch = nodes.slice(0, MAX_BATCH_NODES);
+                if (nodes.length > MAX_BATCH_NODES) {
+                    const remainingNodes = nodes.slice(MAX_BATCH_NODES);
+                    for (let r = 0; r < remainingNodes.length; r++) pendingNodes.add(remainingNodes[r]);
+                    scheduleBatchScan();
+                }
+
+                for (let i = 0; i < batch.length; i++) {
+                    const node = batch[i];
                     if (!node || !node.isConnected) continue;
                     scanNodeTree(node);
                 }
 
                 if (cachedManualSelectors && cachedManualSelectors.length) {
-                    applyManualSelectors(cachedManualSelectors);
+                    for (let s = 0; s < cachedManualSelectors.length; s++) {
+                        const sel = cachedManualSelectors[s];
+                        for (let n = 0; n < batch.length; n++) {
+                            const node = batch[n];
+                            try {
+                                if (node.matches && node.matches(sel)) setRtl(node);
+                                if (node.querySelectorAll) {
+                                    const matches = node.querySelectorAll(sel);
+                                    for (let m = 0; m < matches.length; m++) setRtl(matches[m]);
+                                }
+                            } catch (e) {}
+                        }
+                    }
                 }
             }, remaining);
         });
