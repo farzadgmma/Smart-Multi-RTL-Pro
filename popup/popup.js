@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             registerSubmitBtn.disabled = true;
             registerSubmitBtn.textContent = 'در حال ثبت...';
 
+            const originalButtonText = registerSubmitBtn.textContent;
             fetch('https://www.mobtakerai.ir/api/register-user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -95,18 +96,39 @@ document.addEventListener('DOMContentLoaded', async () => {
                     timestamp: new Date().toISOString(),
                     app: 'Multi-RTL-Pro'
                 })
-            }).catch(() => {
-            }).finally(() => {
-                chrome.storage.sync.set({
-                    registered: true,
-                    userPhone: phone,
-                    userCountry: country
-                }, () => {
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Registration request failed with HTTP ${response.status}`);
+                    }
+
+                    return new Promise((resolve, reject) => {
+                        chrome.storage.sync.set({
+                            registered: true,
+                            userPhone: phone,
+                            userCountry: country
+                        }, () => {
+                            if (chrome.runtime.lastError) {
+                                reject(new Error(chrome.runtime.lastError.message));
+                                return;
+                            }
+                            resolve();
+                        });
+                    });
+                })
+                .then(() => {
                     registrationOverlay.classList.add('hidden');
                     notifyContentScript();
                     chrome.tabs.create({ url: 'https://www.mobtakerai.ir/ChromeExtantion/guide.html' });
+                })
+                .catch((error) => {
+                    console.error('Smart Multi-RTL Pro registration failed:', error);
+                    registerError.textContent = 'ثبت‌نام انجام نشد. اتصال اینترنت را بررسی کنید و دوباره تلاش کنید.';
+                })
+                .finally(() => {
+                    registerSubmitBtn.disabled = false;
+                    registerSubmitBtn.textContent = originalButtonText;
                 });
-            });
         });
     }
 
