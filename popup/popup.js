@@ -83,10 +83,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             registerError.textContent = '';
+            const originalButtonText = registerSubmitBtn.textContent;
             registerSubmitBtn.disabled = true;
             registerSubmitBtn.textContent = 'در حال ثبت...';
-
-            const originalButtonText = registerSubmitBtn.textContent;
             fetch('https://www.mobtakerai.ir/api/register-user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
